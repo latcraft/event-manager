@@ -29,10 +29,6 @@ resource "aws_api_gateway_usage_plan" "latcraft_api_usage_plan" {
 resource "aws_api_gateway_api_key" "latcraft_api_key" {
   name                    = "latcraft_api_key"
   description             = "Default LatCraft API key"
-  stage_key {
-    rest_api_id           = "${aws_api_gateway_rest_api.latcraft_api.id}"
-    stage_name            = "${aws_api_gateway_deployment.latcraft_api_deployment.stage_name}"
-  }
 }
 
 resource "aws_api_gateway_usage_plan_key" "main" {

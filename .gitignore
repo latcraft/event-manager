@@ -6,6 +6,7 @@
 *.jar
 *.war
 *.ear
+*.zip
 
 # Virtual Machine Crash Logs
 hs_err_pid*
