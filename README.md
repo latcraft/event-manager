@@ -1,4 +1,6 @@
 
+# Event manager
+
 Automation tasks for event publishing and support.
 
 > **NOTE:** For running automation tasks locally, copy contents of the `gradle.properties` file from the `latcraft/passwords` project to the `local.propeties` file.
