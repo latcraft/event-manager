@@ -47,7 +47,7 @@ resource "aws_lambda_function" "auto_update_latcraft_functions" {
   function_name           = "auto_update_latcraft_functions"
   description             = "Update LatCraft Lambda Functions on Code Push to S3 Bucket"
   role                    = "${aws_iam_role.latcraft_lambda_updater.arn}"
-  handler                 = "exports.handler"
+  handler                 = "autoUpdater.handler"
   runtime                 = "nodejs6.10"
   memory_size             = "128"
   timeout                 = "30"
