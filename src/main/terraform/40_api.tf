@@ -1,4 +1,16 @@
+/*
+resource "aws_lambda_permission" "publish_cards_function_api_gatewaypermission" {
+  statement_id            = "AllowExecutionFromAPIGateway"
+  action                  = "lambda:InvokeFunction"
+  function_name           = "${aws_lambda_function.publish_cards_function.arn}"
+  qualifier               = "${aws_lambda_alias.publish_cards_function_alias.name}"
+  principal               = "apigateway.amazonaws.com"
+  */
+#  source_arn              = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.DevTernityAPI.id}/*/POST/ticket"
+#}
 
+
+/*
 resource "aws_iam_role" "devternity_api_executor" {
   name                    = "devternity_api_executor"
   assume_role_policy      = <<EOF
@@ -172,3 +184,4 @@ resource "aws_api_gateway_deployment" "DevTernityAPIDeployment" {
   rest_api_id             = "${aws_api_gateway_rest_api.DevTernityAPI.id}"
   stage_name              = "prod"
 }
+*/

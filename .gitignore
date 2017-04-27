@@ -26,6 +26,5 @@ local.properties
 # Terraform files
 *.backup
 *.tfstate
-vars.tf
-00_vars.tf
 *.json
+src/main/terraform/00_vars.tf
