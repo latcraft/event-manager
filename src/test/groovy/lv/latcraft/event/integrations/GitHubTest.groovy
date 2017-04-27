@@ -6,6 +6,6 @@ class GitHubTest {
 
   @Test
   void testGitHub() {
-    println(new GitHub().getChecksum('/repos/latcraft/website/contents/data/events.json'))
+    // println(new GitHub().getChecksum('/repos/latcraft/website/contents/data/events.json'))
   }
 }
