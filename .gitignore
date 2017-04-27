@@ -1,4 +1,3 @@
-*.class
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -8,5 +7,25 @@
 *.war
 *.ear
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+# Virtual Machine Crash Logs
 hs_err_pid*
+
+# IDE and build files
+*.class
+.idea/
+.gradle/
+build/
+bin/
+out/
+*.ipr
+*.iws
+*.iml
+gradle.properties
+local.properties
+
+# Terraform files
+*.backup
+*.tfstate
+vars.tf
+00_vars.tf
+*.json
