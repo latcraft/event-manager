@@ -27,4 +27,4 @@ local.properties
 *.backup
 *.tfstate
 *.json
-src/main/terraform/00_vars.tf
+*.info
