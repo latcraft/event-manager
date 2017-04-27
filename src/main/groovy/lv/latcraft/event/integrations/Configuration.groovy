@@ -1,9 +1,15 @@
 package lv.latcraft.event.integrations
 
-import com.amazonaws.services.kms.AWSKMS
 import com.amazonaws.services.kms.AWSKMSClient
 import com.amazonaws.services.kms.model.DecryptRequest
 import com.amazonaws.services.kms.model.DecryptResult
+import com.amazonaws.services.s3.model.S3Object
+import lv.latcraft.event.utils.S3Methods
+
+import java.nio.ByteBuffer
+
+import static lv.latcraft.event.utils.LambdaMethods.isInsideLambda
+
 
 class Configuration {
 
@@ -11,19 +17,22 @@ class Configuration {
 
   static {
     File localPropertiesFile = new File('local.properties')
+    if (insideLambda) {
+      localPropertiesFile = new File('/tmp/local.properties')
+      S3Object object = S3Methods.s3.getObject('latcraft-code', 'local.properties')
+      localPropertiesFile.bytes = decrypt(object.objectContent.bytes)
+    }
     if (localPropertiesFile.exists()) {
       LOCAL_PROPERTIES.load(localPropertiesFile.newInputStream())
     }
-    // TODO: implement read from KMS if it is available
   }
 
-  private static Properties decrypt() {
-    Properties props = new Properties()
-    DecryptRequest decryptRequest = new DecryptRequest()
-    // TODO: decrypt data in lambda context
+  private static byte[] decrypt(byte[] data) {
+    DecryptRequest decryptRequest = new DecryptRequest().withCiphertextBlob(ByteBuffer.wrap(data))
     DecryptResult result = new AWSKMSClient().decrypt(decryptRequest)
-    props.load(new ByteArrayInputStream(result.plaintext.array()))
-    props
+    byte[] resultData = new byte[result.plaintext.remaining()]
+    result.plaintext.get(resultData)
+    resultData
   }
 
   private static String getConfigProperty(String name) {

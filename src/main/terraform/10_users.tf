@@ -1,3 +1,4 @@
+
 resource "aws_iam_user" "latcraft_lambda" {
   name = "latcraft_lambda"
 }
