@@ -1,13 +1,16 @@
 language: java
 jdk:
   - oraclejdk8
+install:
+  - pip install awscli
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
-  directories:
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
+  - pip
+  - directories:
+     - $HOME/.gradle/caches/
+     - $HOME/.gradle/wrapper/
 script: ./gradlew build
 notifications:
   slack:
@@ -25,8 +28,5 @@ deploy:
     acl: public_read
     on:
       repo: latcraft/event-manager
-  - provider: script
-    skip_cleanup: true
-    script: update_lambdas.sh
-    on:
-      repo: latcraft/event-manager
+after_deploy:
+  - aws lambda invoke --invocation-type RequestResponse --function-name auto_update_latcraft_functions --region eu-west-1 --log-type Tail --payload '{"functions": ["publish_cards_function"]}' update_response.txt
