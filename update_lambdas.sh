@@ -8,4 +8,4 @@ aws lambda invoke \
 --region eu-west-1 \
 --log-type Tail \
 --payload '{"functions": ["publish_cards_function"]}' \
-update_response.txt | base64 --decode
+update_response.txt
