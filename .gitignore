@@ -21,8 +21,6 @@ out/
 *.ipr
 *.iws
 *.iml
-gradle.properties
-local.properties
 
 # Terraform files
 *.backup
@@ -32,3 +30,5 @@ local.properties
 
 # Other
 update_response.txt
+upload_secrets.sh
+local.properties*

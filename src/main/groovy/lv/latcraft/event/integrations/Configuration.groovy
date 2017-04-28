@@ -3,8 +3,8 @@ package lv.latcraft.event.integrations
 import com.amazonaws.services.kms.AWSKMSClient
 import com.amazonaws.services.kms.model.DecryptRequest
 import com.amazonaws.services.kms.model.DecryptResult
+import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.S3Object
-import lv.latcraft.event.utils.S3Methods
 
 import java.nio.ByteBuffer
 
@@ -19,7 +19,7 @@ class Configuration {
     File localPropertiesFile = new File('local.properties')
     if (insideLambda) {
       localPropertiesFile = new File('/tmp/local.properties')
-      S3Object object = S3Methods.s3.getObject('latcraft-code', 'local.properties')
+      S3Object object = new AmazonS3Client().getObject('latcraft-code', 'local.properties.base64')
       localPropertiesFile.bytes = decrypt(object.objectContent.bytes)
     }
     if (localPropertiesFile.exists()) {
