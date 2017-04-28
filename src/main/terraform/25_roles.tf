@@ -25,7 +25,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "latcraft_lambda_executor_policy" {
-    name                  = "devternity_lambda_executor_policy"
+    name                  = "latcraft_lambda_executor_policy"
     role                  = "${aws_iam_role.latcraft_lambda_executor.id}"
     policy                = <<EOF
 {
