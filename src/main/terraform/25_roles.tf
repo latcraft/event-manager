@@ -47,7 +47,10 @@ resource "aws_iam_role_policy" "latcraft_lambda_executor_policy" {
     {
       "Effect": "Allow",
       "Action": ["s3:ListBucket"],
-      "Resource": ["${aws_s3_bucket.latcraft_images.arn}"]
+      "Resource": [
+        "${aws_s3_bucket.latcraft_images.arn}",
+        "${aws_s3_bucket.latcraft_code.arn}"
+      ]
     },
     {
       "Effect": "Allow",
@@ -57,7 +60,10 @@ resource "aws_iam_role_policy" "latcraft_lambda_executor_policy" {
         "s3:GetObject",
         "s3:GetObjectAcl"
       ],
-      "Resource": ["${aws_s3_bucket.latcraft_images.arn}/*"]
+      "Resource": [
+        "${aws_s3_bucket.latcraft_images.arn}/*",
+        "${aws_s3_bucket.latcraft_code.arn}/*"
+      ]
     }
   ]
 }
