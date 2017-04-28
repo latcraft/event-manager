@@ -28,5 +28,5 @@ deploy:
     acl: public_read
     on:
       repo: latcraft/event-manager
-after_deploy:
+after_success:
   - aws lambda invoke --invocation-type RequestResponse --function-name auto_update_latcraft_functions --region eu-west-1 --log-type Tail --payload '{"functions": ["publish_cards_function"]}' update_response.txt
