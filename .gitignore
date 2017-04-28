@@ -29,3 +29,6 @@ local.properties
 *.tfstate
 *.json
 *.info
+
+# Other
+update_response.txt

@@ -85,16 +85,6 @@ resource "aws_lambda_permission" "latcraft_lambda_updater_bucket_permission" {
   source_arn              = "${aws_s3_bucket.latcraft_code.arn}"
 }
 
-resource "aws_s3_bucket_notification" "latcraft_code_update_notification" {
-  bucket                  = "${aws_s3_bucket.latcraft_code.id}"
-  lambda_function {
-    lambda_function_arn   = "${aws_lambda_function.auto_update_latcraft_functions.arn}"
-    events                = [
-        "s3:ObjectCreated:*"
-    ]
-  }
-}
-
 resource "aws_lambda_function" "auto_update_latcraft_functions" {
   filename                = "autoUpdater.zip"
   source_code_hash        = "${base64sha256(file("autoUpdater.zip"))}"
