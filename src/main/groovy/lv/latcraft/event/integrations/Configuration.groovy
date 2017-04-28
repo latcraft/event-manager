@@ -20,7 +20,7 @@ class Configuration {
     if (insideLambda) {
       localPropertiesFile = new File('/tmp/local.properties')
       S3Object object = new AmazonS3Client().getObject('latcraft-code', 'local.properties.base64')
-      localPropertiesFile.bytes = decrypt(Base64.decoder.decode(object.objectContent.text))
+      localPropertiesFile.bytes = decrypt(Base64.decoder.decode(object.objectContent.text.trim()))
     }
     if (localPropertiesFile.exists()) {
       LOCAL_PROPERTIES.load(localPropertiesFile.newInputStream())
