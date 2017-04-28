@@ -8,7 +8,7 @@ variable "lambda_code_package_prefix" {
 }
 
 variable "lambda_code_default_method" {
-  default = "doExecute"
+  default = "execute"
 }
 
 data "aws_caller_identity" "current" {
