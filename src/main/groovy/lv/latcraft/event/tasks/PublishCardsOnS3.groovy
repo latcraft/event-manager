@@ -100,7 +100,7 @@ class PublishCardsOnS3 extends BaseTask {
 
   static String getSvgTemplate(String templateId) {
     String templateName = "${templateId}.svg"
-    getClass().getResource("/cards/${templateName}")?.text ?: new File(templateName).text
+    getClass().getResource("/cards/${templateName}")?.text ?: new File("cards/${templateName}").text
   }
 
   static String generateEventCard(String svgTemplateText, Map<String, ?> event) {
