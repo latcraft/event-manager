@@ -10,6 +10,11 @@ resource "aws_lambda_function" "publish_cards_function" {
   memory_size             = "512"
   timeout                 = "300"
   kms_key_arn             = "${aws_kms_key.latcraft_kms_key.arn}"
+  environment {
+    variables = {
+      AWS_DEFAULT_REGION  = "${var.aws_region}"
+    }
+  }
 }
 
 resource "aws_lambda_alias" "publish_cards_function_alias" {

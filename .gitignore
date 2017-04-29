@@ -29,6 +29,4 @@ out/
 *.info
 
 # Other
-update_response.txt
-upload_secrets.sh
 local.properties*

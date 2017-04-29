@@ -1,10 +1,13 @@
 package lv.latcraft.event.integrations
 
-import com.amazonaws.services.kms.AWSKMSClient
+import com.amazonaws.services.kms.AWSKMS
+import com.amazonaws.services.kms.AWSKMSClientBuilder
 import com.amazonaws.services.kms.model.DecryptRequest
 import com.amazonaws.services.kms.model.DecryptResult
-import com.amazonaws.services.s3.AmazonS3Client
+import com.amazonaws.services.s3.AmazonS3
+import com.amazonaws.services.s3.AmazonS3ClientBuilder
 import com.amazonaws.services.s3.model.S3Object
+import com.amazonaws.util.Base64
 import groovy.util.logging.Log4j
 
 import java.nio.ByteBuffer
@@ -20,9 +23,10 @@ class Configuration {
     try {
       File localPropertiesFile = new File('local.properties')
       if (insideLambda) {
-        localPropertiesFile = new File('/tmp/local.properties')
-        S3Object object = new AmazonS3Client().getObject('latcraft-code', 'local.properties.base64')
-        localPropertiesFile.bytes = decrypt(Base64.decoder.decode(object.objectContent.text.trim()))
+        configLogger.info("Executing from within Lambda context")
+        localPropertiesFile = File.createTempFile("local", "properties")
+        S3Object object = defaultS3().getObject('latcraft-code', 'local.properties.encrypted.base64')
+        localPropertiesFile.bytes = decrypt(Base64.decode(object.objectContent.text.trim()))
       }
       if (localPropertiesFile.exists()) {
         LOCAL_PROPERTIES.load(localPropertiesFile.newInputStream())
@@ -35,10 +39,18 @@ class Configuration {
 
   private static byte[] decrypt(byte[] data) {
     DecryptRequest decryptRequest = new DecryptRequest().withCiphertextBlob(ByteBuffer.wrap(data))
-    DecryptResult result = new AWSKMSClient().decrypt(decryptRequest)
+    DecryptResult result = defaultKMS().decrypt(decryptRequest)
     byte[] resultData = new byte[result.plaintext.remaining()]
     result.plaintext.get(resultData)
     resultData
+  }
+
+  private static AmazonS3 defaultS3() {
+    AmazonS3ClientBuilder.standard().build()
+  }
+
+  private static AWSKMS defaultKMS() {
+    AWSKMSClientBuilder.standard().build()
   }
 
   private static String getConfigProperty(String name) {

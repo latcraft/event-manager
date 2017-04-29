@@ -3,8 +3,8 @@ resource "aws_kms_key" "latcraft_kms_key" {
   description             = "latcraft_kms_key"
   policy                  = <<EOF
 {
-  "Id": "key-consolepolicy-3",
   "Version": "2012-10-17",
+  "Id": "key-consolepolicy-3",
   "Statement": [
     {
       "Sid": "Enable IAM User Permissions",
@@ -49,8 +49,8 @@ resource "aws_kms_key" "latcraft_kms_key" {
       "Effect": "Allow",
       "Principal": {
         "AWS": [
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/latcraft_lambda_executor",
-          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/latcraft_lambda"
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${aws_iam_role.latcraft_lambda_executor.name}",
+          "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${aws_iam_user.latcraft_lambda.name}"
         ]
       },
       "Action": [
@@ -79,7 +79,7 @@ resource "aws_kms_key" "latcraft_kms_key" {
       "Resource": "*",
       "Condition": {
         "Bool": {
-          "kms:GrantIsForAWSResource": true
+          "kms:GrantIsForAWSResource": "true"
         }
       }
     }
