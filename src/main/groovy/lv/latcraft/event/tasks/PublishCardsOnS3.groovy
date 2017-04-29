@@ -125,7 +125,7 @@ class PublishCardsOnS3 extends BaseTask {
     XmlUtil.serialize(svg)
   }
 
-  public static void main(String[] args) {
+  static void main(String[] args) {
     new PublishCardsOnS3().execute([:], new InternalContext())
   }
 
