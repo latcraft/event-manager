@@ -46,7 +46,20 @@ resource "aws_iam_role_policy" "latcraft_lambda_executor_policy" {
     },
     {
       "Effect": "Allow",
-      "Action": ["s3:ListBucket"],
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
       "Resource": [
         "${aws_s3_bucket.latcraft_images.arn}",
         "${aws_s3_bucket.latcraft_code.arn}"

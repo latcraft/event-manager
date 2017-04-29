@@ -5,25 +5,31 @@ import com.amazonaws.services.kms.model.DecryptRequest
 import com.amazonaws.services.kms.model.DecryptResult
 import com.amazonaws.services.s3.AmazonS3Client
 import com.amazonaws.services.s3.model.S3Object
+import groovy.util.logging.Log4j
 
 import java.nio.ByteBuffer
 
 import static lv.latcraft.event.utils.LambdaMethods.isInsideLambda
 
-
+@Log4j("configLogger")
 class Configuration {
 
   private final static Properties LOCAL_PROPERTIES = new Properties()
 
   static {
-    File localPropertiesFile = new File('local.properties')
-    if (insideLambda) {
-      localPropertiesFile = new File('/tmp/local.properties')
-      S3Object object = new AmazonS3Client().getObject('latcraft-code', 'local.properties.base64')
-      localPropertiesFile.bytes = decrypt(Base64.decoder.decode(object.objectContent.text.trim()))
-    }
-    if (localPropertiesFile.exists()) {
-      LOCAL_PROPERTIES.load(localPropertiesFile.newInputStream())
+    try {
+      File localPropertiesFile = new File('local.properties')
+      if (insideLambda) {
+        localPropertiesFile = new File('/tmp/local.properties')
+        S3Object object = new AmazonS3Client().getObject('latcraft-code', 'local.properties.base64')
+        localPropertiesFile.bytes = decrypt(Base64.decoder.decode(object.objectContent.text.trim()))
+      }
+      if (localPropertiesFile.exists()) {
+        LOCAL_PROPERTIES.load(localPropertiesFile.newInputStream())
+      }
+    } catch (Throwable t) {
+      configLogger.fatal("Problem during initialization", t)
+      throw t
     }
   }
 

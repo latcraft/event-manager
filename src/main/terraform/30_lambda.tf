@@ -9,6 +9,7 @@ resource "aws_lambda_function" "publish_cards_function" {
   runtime                 = "java8"
   memory_size             = "512"
   timeout                 = "300"
+  kms_key_arn             = "${aws_kms_key.latcraft_kms_key.arn}"
 }
 
 resource "aws_lambda_alias" "publish_cards_function_alias" {
