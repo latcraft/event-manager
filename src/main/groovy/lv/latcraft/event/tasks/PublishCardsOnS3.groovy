@@ -5,7 +5,6 @@ import groovy.util.logging.Log4j
 import groovy.util.slurpersupport.GPathResult
 import groovy.xml.XmlUtil
 import lv.latcraft.event.lambda.InternalContext
-import lv.latcraft.event.utils.S3Methods
 import org.apache.commons.lang.WordUtils
 
 import static lv.latcraft.event.utils.FileMethods.temporaryFile
