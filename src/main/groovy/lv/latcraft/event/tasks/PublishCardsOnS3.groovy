@@ -1,6 +1,7 @@
 package lv.latcraft.event.tasks
 
 import com.amazonaws.services.lambda.runtime.Context
+import com.amazonaws.services.s3.model.PutObjectResult
 import groovy.util.logging.Log4j
 import groovy.util.slurpersupport.GPathResult
 import groovy.xml.XmlUtil
@@ -69,7 +70,7 @@ class PublishCardsOnS3 extends BaseTask {
             // Generate event card.
             logger.info "Generating ${filePrefix}"
             cardFile.text = generateSpeakerCard(getSvgTemplate(templateId), event, session)
-            s3.putObject(putRequest("${filePrefix}.png", renderPNG(cardFile)))
+            PutObjectResult result = s3.putObject(putRequest("${filePrefix}.png", renderPNG(cardFile)))
 
             // Save result S3 object URLs.
             response[filePrefix] = getObjectUrl("${filePrefix}.png")
