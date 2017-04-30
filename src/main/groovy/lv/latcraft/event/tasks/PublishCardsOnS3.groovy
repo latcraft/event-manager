@@ -1,7 +1,6 @@
 package lv.latcraft.event.tasks
 
 import com.amazonaws.services.lambda.runtime.Context
-import com.amazonaws.services.s3.model.PutObjectResult
 import groovy.util.logging.Log4j
 import groovy.util.slurpersupport.GPathResult
 import groovy.xml.XmlUtil
@@ -35,13 +34,17 @@ class PublishCardsOnS3 extends BaseTask {
   ]
 
   Map<String, String> doExecute(Map<String, String> request, Context context) {
+
+    List<String> cards = request.containsKey('cards') && request.cards ? request.cards.split(',').toList() : EVENT_CARDS + SPEAKER_CARDS
+    logger.info("Selected cards: ${cards}")
+
     Map<String, String> response = [:]
     futureEvents.each { Map<String, ?> event ->
 
       String eventId = calculateEventId(event)
 
       event['cards'] = [:]
-      EVENT_CARDS.each { String templateId ->
+      EVENT_CARDS.findAll { cards.contains(it) }.each { String templateId ->
 
         String filePrefix = "event-${templateId}-${eventId}"
         File cardFile = temporaryFile(filePrefix, '.svg')
