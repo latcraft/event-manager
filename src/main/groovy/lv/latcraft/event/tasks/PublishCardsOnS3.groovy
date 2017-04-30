@@ -45,15 +45,17 @@ class PublishCardsOnS3 extends BaseTask {
 
         String filePrefix = "event-${templateId}-${eventId}"
         File cardFile = temporaryFile(filePrefix, '.svg')
+        String objectUrl = getObjectUrl("${filePrefix}.png")
 
         // Generate event card.
         logger.info "Generating ${filePrefix}"
         cardFile.text = generateEventCard(getSvgTemplate(templateId), event)
         s3.putObject(putRequest("${filePrefix}.png", renderPNG(cardFile)))
+        logger.info("Object created/updated: ${objectUrl}")
 
         // Save result S3 object URLs.
-        response[filePrefix] = getObjectUrl("${filePrefix}.png")
-        event['cards'][filePrefix] = getObjectUrl("${filePrefix}.png")
+        response[filePrefix] = objectUrl
+        event['cards'][filePrefix] = objectUrl
 
       }
 
@@ -66,15 +68,17 @@ class PublishCardsOnS3 extends BaseTask {
 
             String filePrefix = "event-${templateId}-${eventId}-${speakerId}"
             File cardFile = temporaryFile(filePrefix, '.svg')
+            String objectUrl = getObjectUrl("${filePrefix}.png")
 
             // Generate event card.
             logger.info "Generating ${filePrefix}"
             cardFile.text = generateSpeakerCard(getSvgTemplate(templateId), event, session)
-            PutObjectResult result = s3.putObject(putRequest("${filePrefix}.png", renderPNG(cardFile)))
+            s3.putObject(putRequest("${filePrefix}.png", renderPNG(cardFile)))
+            logger.info("Object created/updated: ${objectUrl}")
 
             // Save result S3 object URLs.
-            response[filePrefix] = getObjectUrl("${filePrefix}.png")
-            session['cards'][filePrefix] = getObjectUrl("${filePrefix}.png")
+            response[filePrefix] = objectUrl
+            session['cards'][filePrefix] = objectUrl
 
           }
         }
