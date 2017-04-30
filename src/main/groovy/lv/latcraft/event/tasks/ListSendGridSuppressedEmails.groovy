@@ -2,8 +2,7 @@ package lv.latcraft.event.tasks
 
 import com.amazonaws.services.lambda.runtime.Context
 import groovy.util.logging.Log4j
-import groovyx.net.http.Method
-import lv.latcraft.event.lambda.InternalContext
+import lv.latcraft.event.lambda.mock.InternalContext
 
 @Log4j("logger")
 class ListSendGridSuppressedEmails extends BaseTask {
@@ -30,7 +29,7 @@ class ListSendGridSuppressedEmails extends BaseTask {
     response
   }
 
-  public static void main(String[] args) {
+  static void main(String[] args) {
     new ListSendGridSuppressedEmails().execute([:], new InternalContext())
   }
 

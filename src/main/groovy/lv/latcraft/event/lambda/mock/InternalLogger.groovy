@@ -1,4 +1,4 @@
-package lv.latcraft.event.lambda
+package lv.latcraft.event.lambda.mock
 
 import com.amazonaws.services.lambda.runtime.LambdaLogger
 import groovy.util.logging.Log4j

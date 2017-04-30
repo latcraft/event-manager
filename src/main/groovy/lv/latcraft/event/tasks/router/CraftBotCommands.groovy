@@ -1,7 +1,7 @@
 package lv.latcraft.event.tasks.router
 
 import com.amazonaws.services.lambda.runtime.Context
-import lv.latcraft.event.lambda.InternalContext
+import lv.latcraft.event.lambda.mock.InternalContext
 import lv.latcraft.event.tasks.BaseTask
 
 class CraftBotCommands extends BaseTask {

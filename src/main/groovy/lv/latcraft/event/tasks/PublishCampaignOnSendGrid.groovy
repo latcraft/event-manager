@@ -3,7 +3,7 @@ package lv.latcraft.event.tasks
 import com.amazonaws.services.lambda.runtime.Context
 import groovy.util.logging.Log4j
 import lv.latcraft.event.integrations.Configuration
-import lv.latcraft.event.lambda.InternalContext
+import lv.latcraft.event.lambda.mock.InternalContext
 import lv.latcraft.event.utils.S3Methods
 
 import static lv.latcraft.event.utils.Constants.templateEngine

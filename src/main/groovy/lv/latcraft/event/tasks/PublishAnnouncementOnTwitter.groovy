@@ -3,8 +3,7 @@ package lv.latcraft.event.tasks
 import com.amazonaws.services.lambda.runtime.Context
 import groovy.util.logging.Log4j
 import lv.latcraft.event.integrations.Configuration
-import lv.latcraft.event.lambda.InternalContext
-import lv.latcraft.event.utils.FileMethods
+import lv.latcraft.event.lambda.mock.InternalContext
 import twitter4j.Paging
 import twitter4j.Twitter
 import twitter4j.TwitterFactory
@@ -174,7 +173,7 @@ class PublishAnnouncementOnTwitter extends BaseTask {
 //
 //  task build(dependsOn: [notifyTwitter, twitterUpdateMasterData])
 
-  public static void main(String[] args) {
+  static void main(String[] args) {
     new PublishAnnouncementOnTwitter().execute([:], new InternalContext())
   }
 

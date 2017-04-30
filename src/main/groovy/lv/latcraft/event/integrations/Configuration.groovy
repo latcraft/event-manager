@@ -26,6 +26,7 @@ class Configuration {
         configLogger.info("Executing from within Lambda context")
         localPropertiesFile = File.createTempFile("local", "properties")
         S3Object object = defaultS3().getObject('latcraft-code', 'local.properties.encrypted.base64')
+        configLogger.info("Retrieved encrypted properties file")
         localPropertiesFile.bytes = decrypt(Base64.decode(object.objectContent.text.trim()))
       }
       if (localPropertiesFile.exists()) {

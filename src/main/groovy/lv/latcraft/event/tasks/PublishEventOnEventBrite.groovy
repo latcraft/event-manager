@@ -3,7 +3,7 @@ package lv.latcraft.event.tasks
 import com.amazonaws.services.lambda.runtime.Context
 import groovy.util.logging.Log4j
 import lv.latcraft.event.integrations.Configuration
-import lv.latcraft.event.lambda.InternalContext
+import lv.latcraft.event.lambda.mock.InternalContext
 
 import static lv.latcraft.event.utils.Constants.*
 
@@ -130,7 +130,7 @@ class PublishEventOnEventBrite extends BaseTask {
     template.make([event: event]).toString()
   }
 
-  public static void main(String[] args) {
+  static void main(String[] args) {
     new PublishEventOnEventBrite().execute([:], new InternalContext())
   }
 
