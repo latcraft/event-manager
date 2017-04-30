@@ -67,7 +67,7 @@ class PublishCardsOnS3 extends BaseTask {
 
           String speakerId = replaceLatvianLetters(session.name as String).trim().toLowerCase().replaceAll('[ ]', '_')
           session['cards'] = [:]
-          SPEAKER_CARDS.each { String templateId ->
+          SPEAKER_CARDS.findAll { cards.contains(it) }.each { String templateId ->
 
             String filePrefix = "event-${templateId}-${eventId}-${speakerId}"
             File cardFile = temporaryFile(filePrefix, '.svg')
