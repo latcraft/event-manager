@@ -44,16 +44,21 @@ class PublishCardsOnS3 extends BaseTask {
     logger.info("Update event data: ${updateEventData}")
 
     Map<String, String> response = [:]
+    boolean cardsGenerated = false
     futureEvents.each { Map<String, ?> event ->
 
       String eventId = calculateEventId(event)
 
-      event['cards'] = [:]
+      if (!event.containsKey('cards')) {
+        event['cards'] = [:]
+      }
+
       EVENT_CARDS.findAll { selectedCards.contains(it) }.each { String templateId ->
 
         String filePrefix = "event-${templateId}-${eventId}"
         File cardFile = temporaryFile(filePrefix, '.svg')
         String objectUrl = getObjectUrl("${filePrefix}.png")
+        cardsGenerated = true
 
         // Generate event card.
         logger.info "Generating ${filePrefix}"
@@ -77,6 +82,7 @@ class PublishCardsOnS3 extends BaseTask {
             String filePrefix = "event-${templateId}-${eventId}-${speakerId}"
             File cardFile = temporaryFile(filePrefix, '.svg')
             String objectUrl = getObjectUrl("${filePrefix}.png")
+            cardsGenerated = true
 
             // Generate event card.
             logger.info "Generating ${filePrefix}"
@@ -93,7 +99,7 @@ class PublishCardsOnS3 extends BaseTask {
       }
 
       // Update master data on GitHub.
-      if (updateEventData) {
+      if (cardsGenerated && updateEventData) {
         List<Map<String, ?>> eventsToUpdate = events
         eventsToUpdate.eachWithIndex { eventToUpdate, i ->
           if (calculateEventId(eventToUpdate) == eventId) {
@@ -104,8 +110,8 @@ class PublishCardsOnS3 extends BaseTask {
       }
 
       // Send Slack message.
-      if (sendSlackMessage) {
-        slack.send("Good news, master! Event cards are uploaded to AWS S3!")
+      if (cardsGenerated && sendSlackMessage) {
+        slack.send("Good news, master! Event card(s) are uploaded to AWS S3!")
         response.sort { it.key }.each { key, value ->
           slack.send(value)
         }

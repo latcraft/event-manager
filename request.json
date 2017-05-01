@@ -1,0 +1,5 @@
+{
+  "cards": "normal_event_card_v3",
+  "sendSlackMessage": "false",
+  "updateEventData": "false"
+}

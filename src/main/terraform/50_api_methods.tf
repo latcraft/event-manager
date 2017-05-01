@@ -45,7 +45,7 @@ resource "aws_lambda_permission" "publish_cards_function_api_gatewaypermission" 
 resource "aws_api_gateway_resource" "LatCraftAPIPublishCards" {
   rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
   parent_id               = "${aws_api_gateway_rest_api.latcraft_api.root_resource_id}"
-  path_part               = "ticket"
+  path_part               = "publish_cards"
 }
 
 resource "aws_api_gateway_method" "LatCraftAPIPublishCardsPOST" {
