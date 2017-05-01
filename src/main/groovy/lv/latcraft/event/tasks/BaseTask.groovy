@@ -64,9 +64,12 @@ abstract class BaseTask {
   }
 
   void updateMasterData(List<Map<String, ?>> eventsToUpdate) {
-    baseLogger.info "Updating master data in GitHub"
-    // TODO: compare and update only if there are differences
-    gitHub.updateFile('/repos/latcraft/website/contents/data/events.json', dumpJson(eventsToUpdate))
+    if (dumpJson(eventsToUpdate) != dumpJson(getMasterData())) {
+      baseLogger.info "Updating master data in GitHub"
+      gitHub.updateFile('/repos/latcraft/website/contents/data/events.json', dumpJson(eventsToUpdate))
+    } else {
+      baseLogger.info "Master data in GitHub is already up-to-date"
+    }
   }
 
   static List<Map<String, ?>> getEvents() {
