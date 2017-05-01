@@ -29,24 +29,26 @@ class CraftBotCommands extends BaseTask {
           ]
         } else {
           def response = [
-            "error": "unknown command"
+            "text": "Master, I'm very sorry, I do not know such a command. Please, make me smarter!"
           ]
           commands.each { String prefix, Command command ->
             if (input.text.startsWith(prefix)) {
-              command.accept(input.text)
-              response = [:]
+              response = [
+                "response_type": "in_channel",
+                "text"         : command.apply(input.text)
+              ]
             }
           }
           return response
         }
       } else {
         return [
-          "error": "invalid command"
+          "text": "invalid command"
         ]
       }
     } else {
       return [
-        "error": "invalid token"
+        "text": "invalid token"
       ]
     }
   }

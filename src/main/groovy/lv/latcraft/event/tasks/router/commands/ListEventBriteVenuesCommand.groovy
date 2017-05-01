@@ -5,11 +5,11 @@ import static lv.latcraft.event.utils.LambdaMethods.invokeLambda
 class ListEventBriteVenuesCommand implements Command {
 
   @Override
-  void accept(String params) {
-    invokeLambda('list_event_brite_venues_function')
-  }
-
-  @Override
   String getPrefix() { "list venues" }
 
+  @Override
+  String apply(String s) {
+    invokeLambda('list_event_brite_venues_function')
+    "Master, I started searching for venues!"
+  }
 }
