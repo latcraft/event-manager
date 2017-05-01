@@ -7,7 +7,7 @@ import static lv.latcraft.event.utils.LambdaMethods.invokeLambda
 class PublishEventOnEventBriteCommand extends BaseCommand {
 
   @Override
-  String getPrefix() { "publish evenbrite" }
+  String getPrefix() { "publish eventbrite" }
 
   @Override
   String getDescription() { "publish eventbrite" }
