@@ -21,7 +21,7 @@ class PublishEventOnEventBrite extends BaseTask {
       String eventbriteEventId = event.eventbriteEventId
       if (!eventbriteEventId) {
         eventBrite.events.each { Map eventbriteEvent ->
-          if (isoDateFormat.parse(eventbriteEvent.start.local as String).format('yyyyMMdd') == eventId) {
+          if (isoDateFormat.parse(eventbriteEvent.start.local as String).format('yyyyMMdd', timeZone) == eventId) {
             eventbriteEventId = eventbriteEvent.id
           }
         }
@@ -29,8 +29,8 @@ class PublishEventOnEventBrite extends BaseTask {
 
       // Calculate input parameters.
       String apiUrl = eventbriteEventId ? "/v3/events/${eventbriteEventId}/" : "/v3/events/"
-      def startTime = isoDateFormat.parse(dateFormat.parse(event.date as String).format('yyyy-MM-dd') + 'T' + event.time + ':00')
-      def endTime = isoDateFormat.parse(dateFormat.parse(event.date as String).format('yyyy-MM-dd') + 'T' + event.endTime + ':00')
+      def startTime = isoDateFormat.parse(dateFormat.parse(event.date as String).format('yyyy-MM-dd', timeZone) + 'T' + event.time + ':00')
+      def endTime = isoDateFormat.parse(dateFormat.parse(event.date as String).format('yyyy-MM-dd', timeZone) + 'T' + event.endTime + ':00')
 
       // Create or update event information.
       logger.info "Creating/updating \"LatCraft | ${event.theme}\" (${eventId}, ${eventbriteEventId})"

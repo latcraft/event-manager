@@ -8,6 +8,7 @@ import lv.latcraft.event.integrations.GitHub
 import lv.latcraft.event.integrations.SendGrid
 import lv.latcraft.event.integrations.Slack
 
+import static lv.latcraft.event.utils.Constants.timeZone
 import static lv.latcraft.event.utils.Utils.dumpJson
 import static lv.latcraft.event.utils.Constants.dateFormat
 import static lv.latcraft.event.integrations.Configuration.eventDataFile
@@ -84,7 +85,7 @@ abstract class BaseTask {
    * Calculate unique event ID used to distinguish this event from others in various data sources.
    */
   static String calculateEventId(Map<String, ?> event) {
-    dateFormat.parse(event['date'].toString()).format('yyyyMMdd')
+    dateFormat.parse(event['date'].toString()).format('yyyyMMdd', timeZone)
   }
 
   static String calculateInvitationCampaignTitle(Map event) {
