@@ -8,8 +8,12 @@ class ListEventBriteVenuesCommand implements Command {
   String getPrefix() { "list venues" }
 
   @Override
-  String apply(String s) {
+  String getDescription() { "list venues" }
+
+  @Override
+  String apply(String command) {
     invokeLambda('list_event_brite_venues_function')
     "Master, I started searching for venues!"
   }
+
 }
