@@ -138,7 +138,7 @@ class SvgMethods {
   }
 
   static String getFontRootDir() {
-    insideLambda ? "/var/fonts" : "src/main/resources/fonts"
+    insideLambda ? "/var/task/fonts" : "src/main/resources/fonts"
   }
 
 }

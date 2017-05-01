@@ -12,7 +12,8 @@ resource "aws_lambda_function" "publish_cards_function" {
   kms_key_arn             = "${aws_kms_key.latcraft_kms_key.arn}"
   environment {
     variables = {
-      AWS_DEFAULT_REGION  = "${var.aws_region}"
+      HOME                = "/var/tasks"
+      JAVA_FONTS          = "/var/tasks/fonts"
     }
   }
 }
