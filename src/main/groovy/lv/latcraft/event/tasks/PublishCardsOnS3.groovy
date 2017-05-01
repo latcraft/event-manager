@@ -17,7 +17,7 @@ import static lv.latcraft.event.utils.XmlMethods.setElementValue
 @Log4j("logger")
 class PublishCardsOnS3 extends BaseTask {
 
-  static final List<String> EVENT_CARDS = [
+  static final Set<String> EVENT_CARDS = [
     'normal_event_card_v1',                // twitter, linkedin
     'normal_event_card_v2',
     'normal_event_card_v3',
@@ -28,15 +28,20 @@ class PublishCardsOnS3 extends BaseTask {
     'workshop_facebook_background_v1',
   ]
 
-  static final List<String> SPEAKER_CARDS = [
+  static final Set<String> SPEAKER_CARDS = [
     'speaker_card_v1',
     'speaker_card_v2',
   ]
 
   Map<String, String> doExecute(Map<String, String> request, Context context) {
 
-    List<String> cards = request.containsKey('cards') && request.cards ? request.cards.split(',').toList() : EVENT_CARDS + SPEAKER_CARDS
-    logger.info("Selected cards: ${cards}")
+    // Parse request parameters
+    Set<String> selectedCards = request.containsKey('cards') && request.cards ? request.cards.split(',') as Set : EVENT_CARDS + SPEAKER_CARDS
+    boolean sendSlackMessage = request.containsKey('sendSlackMessage') ? Boolean.valueOf(request.sendSlackMessage) : true
+    boolean updateEventData = request.containsKey('updateEventData') ? Boolean.valueOf(request.updateEventData) : true
+    logger.info("Selected cards: ${selectedCards}")
+    logger.info("Send Slack message: ${sendSlackMessage}")
+    logger.info("Update master data: ${updateEventData}")
 
     Map<String, String> response = [:]
     futureEvents.each { Map<String, ?> event ->
@@ -44,7 +49,7 @@ class PublishCardsOnS3 extends BaseTask {
       String eventId = calculateEventId(event)
 
       event['cards'] = [:]
-      EVENT_CARDS.findAll { cards.contains(it) }.each { String templateId ->
+      EVENT_CARDS.findAll { selectedCards.contains(it) }.each { String templateId ->
 
         String filePrefix = "event-${templateId}-${eventId}"
         File cardFile = temporaryFile(filePrefix, '.svg')
@@ -67,7 +72,7 @@ class PublishCardsOnS3 extends BaseTask {
 
           String speakerId = replaceLatvianLetters(session.name as String).trim().toLowerCase().replaceAll('[ ]', '_')
           session['cards'] = [:]
-          SPEAKER_CARDS.findAll { cards.contains(it) }.each { String templateId ->
+          SPEAKER_CARDS.findAll { selectedCards.contains(it) }.each { String templateId ->
 
             String filePrefix = "event-${templateId}-${eventId}-${speakerId}"
             File cardFile = temporaryFile(filePrefix, '.svg')
@@ -88,17 +93,22 @@ class PublishCardsOnS3 extends BaseTask {
       }
 
       // Update master data on GitHub.
-      List<Map<String, ?>> eventsToUpdate = events
-      eventsToUpdate.eachWithIndex  { eventToUpdate, i ->
-        if (calculateEventId(eventToUpdate) == eventId) {
-          eventsToUpdate[i] = event
+      if (updateEventData) {
+        List<Map<String, ?>> eventsToUpdate = events
+        eventsToUpdate.eachWithIndex { eventToUpdate, i ->
+          if (calculateEventId(eventToUpdate) == eventId) {
+            eventsToUpdate[i] = event
+          }
         }
+        updateMasterData(eventsToUpdate)
       }
-      updateMasterData(eventsToUpdate)
 
-      slack.send("Good news, master! Event cards are uploaded to AWS S3!")
-      response.sort { it.key }.each { key, value ->
-        slack.send(value)
+      // Send Slack message.
+      if (sendSlackMessage) {
+        slack.send("Good news, master! Event cards are uploaded to AWS S3!")
+        response.sort { it.key }.each { key, value ->
+          slack.send(value)
+        }
       }
 
     }
@@ -134,7 +144,11 @@ class PublishCardsOnS3 extends BaseTask {
   }
 
   static void main(String[] args) {
-    new PublishCardsOnS3().execute([:], new InternalContext())
+    new PublishCardsOnS3().execute([
+      cards: 'normal_event_card_v3',
+      sendSlackMessage: 'false',
+      updateEventData: 'false',
+    ], new InternalContext())
   }
 
 }

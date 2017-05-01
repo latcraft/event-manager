@@ -16,6 +16,7 @@ import static lv.latcraft.event.utils.LambdaMethods.*
 import static java.lang.Boolean.FALSE
 import static java.nio.charset.StandardCharsets.UTF_8
 import static lv.latcraft.event.utils.FileMethods.temporaryFile
+import static org.apache.batik.transcoder.SVGAbstractTranscoder.KEY_ALTERNATE_STYLESHEET
 import static org.apache.batik.transcoder.SVGAbstractTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER
 import static org.apache.batik.transcoder.SVGAbstractTranscoder.KEY_USER_STYLESHEET_URI
 import static org.apache.batik.transcoder.XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING
@@ -73,34 +74,35 @@ class SvgMethods {
     cssFile.text = """
       @font-face { 
         font-family: 'sans-serif'; 
-        src: url('src/main/resources/fonts/arial.ttf') format('truetype'); 
+        src: url('${fontRootDir}/arial.ttf') format('truetype'); 
       } 
       @font-face { 
         font-family: 'sans-serif'; 
-        src: url('src/main/resources/fonts/arialb.ttf') format('truetype');
+        src: url('${fontRootDir}/arialb.ttf') format('truetype');
         font-weight: bold;         
       } 
       @font-face { 
         font-family: 'sans-serif'; 
-        src: url('src/main/resources/fonts/ariali.ttf') format('truetype');
+        src: url('${fontRootDir}/ariali.ttf') format('truetype');
         font-style: italic, oblique;         
       } 
       @font-face { 
         font-family: 'sans-serif'; 
-        src: url('src/main/resources/fonts/arialbi.ttf') format('truetype');
+        src: url('${fontRootDir}/arialbi.ttf') format('truetype');
         font-style: italic, oblique;         
         font-weight: bold;                 
       } 
       @font-face { 
         font-family: 'Economica'; 
-        src: url('src/main/resources/fonts/economica.ttf') format('truetype'); 
+        src: url('${fontRootDir}/economica.ttf') format('truetype'); 
       } 
       @font-face { 
         font-family: 'Britannic Bold'; 
-        src: url('src/main/resources/fonts/britannic-bold.ttf') format('truetype'); 
+        src: url('${fontRootDir}/britannic-bold.ttf') format('truetype'); 
       } 
     """
     t.addTranscodingHint(KEY_PIXEL_UNIT_TO_MILLIMETER, new Float((float) (25.4 / DEFAULT_DPI)))
+    t.addTranscodingHint(KEY_ALTERNATE_STYLESHEET, cssFile.toURI().toString())
     t.addTranscodingHint(KEY_USER_STYLESHEET_URI, cssFile.toURI().toString())
     t
   }
@@ -117,7 +119,7 @@ class SvgMethods {
   }
 
   private static InputStream getRendererConfiguration() {
-    File configFile = new File(insideLambda ? "/var/task/fonts/pdf-renderer-cfg.xml" : "fonts/pdf-renderer-cfg.xml")
+    File configFile = new File("${fontRootDir}/pdf-renderer-cfg.xml")
     if (configFile.exists()) {
       log.debug "DEBUG: Using PDF renderer configuration: ${configFile.absolutePath}"
       if (insideLambda) {
@@ -133,6 +135,10 @@ class SvgMethods {
     } else {
       throw new RuntimeException('PDF renderer configuration is not found!')
     }
+  }
+
+  static String getFontRootDir() {
+    insideLambda ? "/var/fonts" : "src/main/resources/fonts"
   }
 
 }
