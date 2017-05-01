@@ -76,7 +76,11 @@ class PublishCardsOnS3 extends BaseTask {
         if (session.type == 'speech') {
 
           String speakerId = replaceLatvianLetters(session.name as String).trim().toLowerCase().replaceAll('[ ]', '_')
-          session['cards'] = [:]
+
+          if (!session.containsKey('cards')) {
+            session['cards'] = [:]
+          }
+
           SPEAKER_CARDS.findAll { selectedCards.contains(it) }.each { String templateId ->
 
             String filePrefix = "event-${templateId}-${eventId}-${speakerId}"

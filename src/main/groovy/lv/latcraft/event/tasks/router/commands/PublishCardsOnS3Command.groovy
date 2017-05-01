@@ -16,8 +16,8 @@ class PublishCardsOnS3Command extends BaseCommand {
   @Override
   String apply(String command) {
     getCards(command).each {
-      invokeLambda('publish_cards_on_s3_function', dumpJson(
-        [ cards: it ]
+      invokeLambda(functionName(PublishCardsOnS3), dumpJson(
+        [ cards: it, updateEventData: 'false' ]
       ))
     }
     "Please, be patient, my master, I started generating the cards!"

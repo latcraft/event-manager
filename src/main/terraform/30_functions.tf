@@ -51,58 +51,6 @@ resource "aws_lambda_alias" "create_new_event_function_alias" {
 }
 
 
-resource "aws_lambda_function" "list_event_brite_venues_function" {
-  s3_bucket               = "${aws_s3_bucket.latcraft_code.bucket}"
-  s3_key                  = "event-manager.zip"
-  function_name           = "list_event_brite_venues_function"
-  description             = "List Event Brite Venues"
-  role                    = "${aws_iam_role.latcraft_lambda_executor.arn}"
-  handler                 = "${var.lambda_code_package_prefix}.ListEventBriteVenues::${var.lambda_code_default_method}"
-  runtime                 = "java8"
-  memory_size             = "512"
-  timeout                 = "300"
-  kms_key_arn             = "${aws_kms_key.latcraft_kms_key.arn}"
-  environment {
-    variables = {
-      HOME                = "/var/task"
-      JAVA_FONTS          = "/var/task/fonts"
-    }
-  }
-}
-
-resource "aws_lambda_alias" "list_event_brite_venues_function_alias" {
-  name                    = "list_event_brite_venues_function_latest"
-  function_name           = "${aws_lambda_function.list_event_brite_venues_function.arn}"
-  function_version        = "$LATEST"
-}
-
-
-resource "aws_lambda_function" "list_send_grid_suppressed_emails_function" {
-  s3_bucket               = "${aws_s3_bucket.latcraft_code.bucket}"
-  s3_key                  = "event-manager.zip"
-  function_name           = "list_send_grid_suppressed_emails_function"
-  description             = "List Send Grid Suppressed Emails"
-  role                    = "${aws_iam_role.latcraft_lambda_executor.arn}"
-  handler                 = "${var.lambda_code_package_prefix}.ListSendGridSuppressedEmails::${var.lambda_code_default_method}"
-  runtime                 = "java8"
-  memory_size             = "512"
-  timeout                 = "300"
-  kms_key_arn             = "${aws_kms_key.latcraft_kms_key.arn}"
-  environment {
-    variables = {
-      HOME                = "/var/task"
-      JAVA_FONTS          = "/var/task/fonts"
-    }
-  }
-}
-
-resource "aws_lambda_alias" "list_send_grid_suppressed_emails_function_alias" {
-  name                    = "list_send_grid_suppressed_emails_function_latest"
-  function_name           = "${aws_lambda_function.list_send_grid_suppressed_emails_function.arn}"
-  function_version        = "$LATEST"
-}
-
-
 resource "aws_lambda_function" "publish_announcement_on_twitter_function" {
   s3_bucket               = "${aws_s3_bucket.latcraft_code.bucket}"
   s3_key                  = "event-manager.zip"

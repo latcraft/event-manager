@@ -3,10 +3,7 @@ package lv.latcraft.event.tasks.router
 import com.amazonaws.services.lambda.runtime.Context
 import lv.latcraft.event.lambda.mock.InternalContext
 import lv.latcraft.event.tasks.BaseTask
-import lv.latcraft.event.tasks.router.commands.Command
-import lv.latcraft.event.tasks.router.commands.ListCardTemplatesCommand
-import lv.latcraft.event.tasks.router.commands.ListEventBriteVenuesCommand
-import lv.latcraft.event.tasks.router.commands.PublishCardsOnS3Command
+import lv.latcraft.event.tasks.router.commands.*
 
 import static lv.latcraft.event.integrations.Configuration.slackCommandSecret
 
@@ -14,9 +11,13 @@ class CraftBotCommands extends BaseTask {
 
   static final Map<String, Command> commands = [:]
   static {
-    addCommand(new ListEventBriteVenuesCommand())
     addCommand(new ListCardTemplatesCommand())
+    addCommand(new ListEventBriteVenuesCommand())
+    addCommand(new ListSuppressedEmailsCommand())
+    addCommand(new CopyContactsCommand())
     addCommand(new PublishCardsOnS3Command())
+    addCommand(new PublishEventOnEventBriteCommand())
+    addCommand(new PublishEventOnSendGridCommand())
   }
 
   static void addCommand(Command c) {
@@ -29,7 +30,7 @@ class CraftBotCommands extends BaseTask {
         if (input.text.startsWith('help')) {
           return [
             "response_type": "in_channel",
-            "text"         : "Master, I can do the following things for you:\n" + commands.collect { "     " + it.value.description }.join('\n')
+            "text"         : "Master, I can do the following things for you:\n" + commands.collect { "    " + it.value.description }.join('\n')
           ]
         } else {
           def response = [

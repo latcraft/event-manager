@@ -1,13 +1,18 @@
-package lv.latcraft.event.tasks
+package lv.latcraft.event.tasks.router.commands
 
-import com.amazonaws.services.lambda.runtime.Context
 import groovy.util.logging.Log4j
-import lv.latcraft.event.lambda.mock.InternalContext
 
 @Log4j("logger")
-class ListSendGridSuppressedEmails extends BaseTask {
+class ListSuppressedEmailsCommand extends BaseCommand {
 
-  Map<String, String> doExecute(Map<String, String> request, Context context) {
+  @Override
+  String getPrefix() { "list suppressions" }
+
+  @Override
+  String getDescription() { "list suppressions" }
+
+  @Override
+  String apply(String command) {
     Map<String, String> response = [:]
     sendGrid.suppressions.each { suppression ->
       logger.info "${suppression.email} (${suppression.group_name})"
@@ -25,12 +30,7 @@ class ListSendGridSuppressedEmails extends BaseTask {
       logger.info "${spamReport.email} (spam)"
       response[spamReport.email.toString()] = "Spam Report"
     }
-    slack.send("Master, here are SendGrid's suppressed emails: \n" + response.collect { key, value -> "${key} (${value})" }.join("\n"))
-    response
-  }
-
-  static void main(String[] args) {
-    new ListSendGridSuppressedEmails().execute([:], new InternalContext())
+    "Master, here are SendGrid's suppressed emails: \n" + response.collect { key, value -> "${key} (${value})" }.join("\n")
   }
 
 }
