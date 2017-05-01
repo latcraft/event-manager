@@ -191,12 +191,15 @@ resource "aws_api_gateway_integration_response" "LatCraftAPI${methodName}POSTInt
   resource_id             = "\${aws_api_gateway_resource.LatCraftAPI${methodName}.id}"
   http_method             = "\${aws_api_gateway_method.LatCraftAPI${methodName}POST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPI${methodName}POSTIntegration"
+  ]  
 }
 
 """
 
     }
-    String functionArnList = functions.collect { "\"\${aws_lambda_function.${it}_function.arn}\"" }.join(', ')
+    String functionArnList = (functions + "craftbot").collect { "\"\${aws_lambda_function.${it}_function.arn}\"" }.join(', ')
     String apiPolicyTerraformContent = """
 
 resource "aws_iam_role_policy" "latcraft_api_executor_policy" {
@@ -243,6 +246,7 @@ task generateUpdateCalls {
     forEachLambdaTask { File taskFile, String functionName, String functionDescription, String className ->
       println "aws lambda update-function-code --function-name ${functionName}_function --s3-bucket latcraft-code --s3-key event-manager.zip"
     }
+    println "aws lambda update-function-code --function-name craftbot_function --s3-bucket latcraft-code --s3-key event-manager.zip"
   }
 }
 
@@ -252,5 +256,6 @@ task generateTravisAfterDeploy {
     forEachLambdaTask { File taskFile, String functionName, String functionDescription, String className ->
       println "  - \"aws lambda update-function-code --function-name ${functionName}_function --s3-bucket latcraft-code --s3-key event-manager.zip\""
     }
+    println "  - \"aws lambda update-function-code --function-name craftbot_function --s3-bucket latcraft-code --s3-key event-manager.zip\""
   }
 }

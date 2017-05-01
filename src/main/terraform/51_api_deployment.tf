@@ -2,6 +2,7 @@
 resource "aws_api_gateway_deployment" "latcraft_api_deployment" {
   rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
   stage_name              = "prod"
+  stage_description       = "${timestamp()}" // forces to 'create' a new deployment each run
 }
 
 resource "aws_api_gateway_usage_plan" "latcraft_api_usage_plan" {

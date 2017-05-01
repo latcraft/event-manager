@@ -26,7 +26,7 @@ resource "aws_iam_role_policy" "latcraft_api_executor_policy" {
             "lambda:InvokeFunction"
         ],
         "Resource": [
-          "${aws_lambda_function.copy_contacts_from_event_brite_to_send_grid_function.arn}", "${aws_lambda_function.create_new_event_function.arn}", "${aws_lambda_function.list_event_brite_venues_function.arn}", "${aws_lambda_function.list_send_grid_suppressed_emails_function.arn}", "${aws_lambda_function.publish_announcement_on_twitter_function.arn}", "${aws_lambda_function.publish_campaign_on_send_grid_function.arn}", "${aws_lambda_function.publish_cards_on_s3_function.arn}", "${aws_lambda_function.publish_event_on_event_brite_function.arn}", "${aws_lambda_function.publish_event_on_lanyrd_function.arn}", "${aws_lambda_function.send_campaign_on_send_grid_function.arn}"  
+          "${aws_lambda_function.copy_contacts_from_event_brite_to_send_grid_function.arn}", "${aws_lambda_function.create_new_event_function.arn}", "${aws_lambda_function.list_event_brite_venues_function.arn}", "${aws_lambda_function.list_send_grid_suppressed_emails_function.arn}", "${aws_lambda_function.publish_announcement_on_twitter_function.arn}", "${aws_lambda_function.publish_campaign_on_send_grid_function.arn}", "${aws_lambda_function.publish_cards_on_s3_function.arn}", "${aws_lambda_function.publish_event_on_event_brite_function.arn}", "${aws_lambda_function.publish_event_on_lanyrd_function.arn}", "${aws_lambda_function.send_campaign_on_send_grid_function.arn}", "${aws_lambda_function.craftbot_function.arn}"  
         ]
     }
   ]
@@ -93,6 +93,9 @@ resource "aws_api_gateway_integration_response" "LatCraftAPICopyContactsFromEven
   resource_id             = "${aws_api_gateway_resource.LatCraftAPICopyContactsFromEventBriteToSendGrid.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPICopyContactsFromEventBriteToSendGridPOST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPICopyContactsFromEventBriteToSendGridPOSTIntegration"
+  ]  
 }
 
 
@@ -154,6 +157,9 @@ resource "aws_api_gateway_integration_response" "LatCraftAPICreateNewEventPOSTIn
   resource_id             = "${aws_api_gateway_resource.LatCraftAPICreateNewEvent.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPICreateNewEventPOST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPICreateNewEventPOSTIntegration"
+  ]  
 }
 
 
@@ -215,6 +221,9 @@ resource "aws_api_gateway_integration_response" "LatCraftAPIListEventBriteVenues
   resource_id             = "${aws_api_gateway_resource.LatCraftAPIListEventBriteVenues.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPIListEventBriteVenuesPOST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIListEventBriteVenuesPOSTIntegration"
+  ]  
 }
 
 
@@ -276,6 +285,9 @@ resource "aws_api_gateway_integration_response" "LatCraftAPIListSendGridSuppress
   resource_id             = "${aws_api_gateway_resource.LatCraftAPIListSendGridSuppressedEmails.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPIListSendGridSuppressedEmailsPOST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIListSendGridSuppressedEmailsPOSTIntegration"
+  ]  
 }
 
 
@@ -337,6 +349,9 @@ resource "aws_api_gateway_integration_response" "LatCraftAPIPublishAnnouncementO
   resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishAnnouncementOnTwitter.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPIPublishAnnouncementOnTwitterPOST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIPublishAnnouncementOnTwitterPOSTIntegration"
+  ]  
 }
 
 
@@ -398,6 +413,9 @@ resource "aws_api_gateway_integration_response" "LatCraftAPIPublishCampaignOnSen
   resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishCampaignOnSendGrid.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPIPublishCampaignOnSendGridPOST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIPublishCampaignOnSendGridPOSTIntegration"
+  ]  
 }
 
 
@@ -459,6 +477,9 @@ resource "aws_api_gateway_integration_response" "LatCraftAPIPublishCardsOnS3POST
   resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishCardsOnS3.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPIPublishCardsOnS3POST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIPublishCardsOnS3POSTIntegration"
+  ]  
 }
 
 
@@ -520,6 +541,9 @@ resource "aws_api_gateway_integration_response" "LatCraftAPIPublishEventOnEventB
   resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishEventOnEventBrite.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPIPublishEventOnEventBritePOST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIPublishEventOnEventBritePOSTIntegration"
+  ]  
 }
 
 
@@ -581,6 +605,9 @@ resource "aws_api_gateway_integration_response" "LatCraftAPIPublishEventOnLanyrd
   resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishEventOnLanyrd.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPIPublishEventOnLanyrdPOST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIPublishEventOnLanyrdPOSTIntegration"
+  ]  
 }
 
 
@@ -642,5 +669,8 @@ resource "aws_api_gateway_integration_response" "LatCraftAPISendCampaignOnSendGr
   resource_id             = "${aws_api_gateway_resource.LatCraftAPISendCampaignOnSendGrid.id}"
   http_method             = "${aws_api_gateway_method.LatCraftAPISendCampaignOnSendGridPOST.http_method}"
   status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPISendCampaignOnSendGridPOSTIntegration"
+  ]  
 }
 

@@ -9,5 +9,5 @@
 
 curl -v \
 --header "x-api-key: $API_KEY" \
--XPOST "https://$API_ID.execute-api.eu-west-1.amazonaws.com/prod/publish_cards_on_s3" \
+-XPOST "https://$API_ID.execute-api.eu-west-1.amazonaws.com/prod/list_event_brite_venues" \
 -d @request.json

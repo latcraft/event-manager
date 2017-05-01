@@ -7,6 +7,7 @@ import lv.latcraft.event.tasks.BaseTask
 class CraftBotCommands extends BaseTask {
 
   Map<String, String> doExecute(Map<String, String> input, Context context) {
+
     // TODO: process commands and call other lambdas
     // hello
     // help <command> <subcommand>
@@ -24,10 +25,12 @@ class CraftBotCommands extends BaseTask {
     // publish twitter
     // send campaign
     // send reminder
-    [:]
+    [
+      "text": "Hello, master!"
+    ]
   }
 
-  public static void main(String[] args) {
+  static void main(String[] args) {
     new CraftBotCommands().execute([:], new InternalContext())
   }
 
