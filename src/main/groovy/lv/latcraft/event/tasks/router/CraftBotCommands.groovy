@@ -18,6 +18,7 @@ class CraftBotCommands extends BaseTask {
     addCommand(new PublishCardsOnS3Command())
     addCommand(new PublishEventOnEventBriteCommand())
     addCommand(new PublishEventOnSendGridCommand())
+    addCommand(new SendCampaignOnSendGridCommand())
   }
 
   static void addCommand(Command c) {
