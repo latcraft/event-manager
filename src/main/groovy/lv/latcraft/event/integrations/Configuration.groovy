@@ -110,6 +110,10 @@ class Configuration {
     getConfigProperty('latcraftSlackHookUrl')
   }
 
+  static String getSlackCommandSecret() {
+    getConfigProperty('latcraftSlackCommandSecret')
+  }
+
   static String getSendGridDefaultListId() {
     getConfigProperty('latcraftSendGridDefaultListId')
   }
