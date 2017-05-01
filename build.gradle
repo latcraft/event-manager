@@ -90,7 +90,10 @@ forEachLambdaTask { File taskFile, String functionName, String functionDescripti
 task generateFunctionDefinitions {
   doLast {
     String functionsTerraformContent = ""
+    List<String> functions = []
     forEachLambdaTask { File taskFile, String functionName, String functionDescription, String className ->
+
+      functions << functionName
 
       functionsTerraformContent += """
 resource "aws_lambda_function" "${functionName}_function" {
@@ -121,7 +124,77 @@ resource "aws_lambda_alias" "${functionName}_function_alias" {
 """
 
     }
-    file('src/main/terraform/30_functions.tf').text = functionsTerraformContent
+    String functionArnList = (functions + "craftbot").collect { "\"\${aws_lambda_function.${it}_function.arn}\"" }.join(', ')
+    String lambdaPolicyTerraformContent = """
+resource "aws_iam_role_policy" "latcraft_lambda_executor_policy" {
+  name                  = "latcraft_lambda_executor_policy"
+  role                  = "\${aws_iam_role.latcraft_lambda_executor.id}"
+  policy                = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams",
+          "logs:PutLogEvents",
+          "logs:GetLogEvents",
+          "logs:FilterLogEvents"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "\${aws_s3_bucket.latcraft_images.arn}",
+        "\${aws_s3_bucket.latcraft_code.arn}"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+        "s3:GetObject",
+        "s3:GetObjectAcl"
+      ],
+      "Resource": [
+        "\${aws_s3_bucket.latcraft_images.arn}/*",
+        "\${aws_s3_bucket.latcraft_code.arn}/*"
+      ]
+    },
+    {
+        "Effect": "Allow",
+        "Action": [
+            "lambda:InvokeFunction"
+        ],
+        "Resource": [
+          ${functionArnList}
+        ]
+    }
+  ]
+}
+EOF
+}
+"""
+    file('src/main/terraform/30_functions.tf').text = functionsTerraformContent + lambdaPolicyTerraformContent
   }
 }
 

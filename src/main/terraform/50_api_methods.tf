@@ -26,7 +26,7 @@ resource "aws_iam_role_policy" "latcraft_api_executor_policy" {
             "lambda:InvokeFunction"
         ],
         "Resource": [
-          "${aws_lambda_function.copy_contacts_from_event_brite_to_send_grid_function.arn}", "${aws_lambda_function.create_new_event_function.arn}", "${aws_lambda_function.publish_announcement_on_twitter_function.arn}", "${aws_lambda_function.publish_campaign_on_send_grid_function.arn}", "${aws_lambda_function.publish_cards_on_s3_function.arn}", "${aws_lambda_function.publish_event_on_event_brite_function.arn}", "${aws_lambda_function.publish_event_on_lanyrd_function.arn}", "${aws_lambda_function.send_campaign_on_send_grid_function.arn}", "${aws_lambda_function.craftbot_function.arn}"  
+          "${aws_lambda_function.copy_contacts_from_event_brite_to_send_grid_function.arn}", "${aws_lambda_function.create_new_event_function.arn}", "${aws_lambda_function.list_event_brite_venues_function.arn}", "${aws_lambda_function.list_suppressed_emails_function.arn}", "${aws_lambda_function.publish_announcement_on_twitter_function.arn}", "${aws_lambda_function.publish_campaign_on_send_grid_function.arn}", "${aws_lambda_function.publish_cards_on_s3_function.arn}", "${aws_lambda_function.publish_event_on_event_brite_function.arn}", "${aws_lambda_function.publish_event_on_lanyrd_function.arn}", "${aws_lambda_function.send_campaign_on_send_grid_function.arn}", "${aws_lambda_function.craftbot_function.arn}"  
         ]
     }
   ]
@@ -159,6 +159,134 @@ resource "aws_api_gateway_integration_response" "LatCraftAPICreateNewEventPOSTIn
   status_code             = "200"
   depends_on              = [
     "aws_api_gateway_integration.LatCraftAPICreateNewEventPOSTIntegration"
+  ]  
+}
+
+
+resource "aws_lambda_permission" "list_event_brite_venues_function_api_gatewaypermission" {
+  statement_id            = "AllowExecutionFromAPIGateway"
+  action                  = "lambda:InvokeFunction"
+  function_name           = "${aws_lambda_function.list_event_brite_venues_function.arn}"
+  qualifier               = "${aws_lambda_alias.list_event_brite_venues_function_alias.name}"
+  principal               = "apigateway.amazonaws.com"
+  source_arn              = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.latcraft_api.id}/*/POST/${aws_api_gateway_resource.LatCraftAPIListEventBriteVenues.path_part}"
+}
+
+resource "aws_api_gateway_resource" "LatCraftAPIListEventBriteVenues" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  parent_id               = "${aws_api_gateway_rest_api.latcraft_api.root_resource_id}"
+  path_part               = "list_event_brite_venues"
+}
+
+resource "aws_api_gateway_method" "LatCraftAPIListEventBriteVenuesPOST" {
+  api_key_required        = true
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListEventBriteVenues.id}"
+  http_method             = "POST"
+  authorization           = "NONE"
+}
+
+resource "aws_api_gateway_integration" "LatCraftAPIListEventBriteVenuesPOSTIntegration" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListEventBriteVenues.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIListEventBriteVenuesPOST.http_method}"
+  integration_http_method = "POST"
+  type                    = "AWS"
+  credentials             = "${aws_iam_role.latcraft_api_executor.arn}"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:function:${aws_lambda_function.list_event_brite_venues_function.function_name}/invocations"
+}
+
+resource "aws_api_gateway_method_response" "LatCraftAPIListEventBriteVenuesPOSTResponse" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListEventBriteVenues.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIListEventBriteVenuesPOST.http_method}"
+  status_code             = "200"
+  response_models         = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_method_response" "LatCraftAPIListEventBriteVenuesPOSTError" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListEventBriteVenues.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIListEventBriteVenuesPOST.http_method}"
+  status_code             = "500"
+  response_models         = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "LatCraftAPIListEventBriteVenuesPOSTIntegrationResponse" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListEventBriteVenues.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIListEventBriteVenuesPOST.http_method}"
+  status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIListEventBriteVenuesPOSTIntegration"
+  ]  
+}
+
+
+resource "aws_lambda_permission" "list_suppressed_emails_function_api_gatewaypermission" {
+  statement_id            = "AllowExecutionFromAPIGateway"
+  action                  = "lambda:InvokeFunction"
+  function_name           = "${aws_lambda_function.list_suppressed_emails_function.arn}"
+  qualifier               = "${aws_lambda_alias.list_suppressed_emails_function_alias.name}"
+  principal               = "apigateway.amazonaws.com"
+  source_arn              = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.latcraft_api.id}/*/POST/${aws_api_gateway_resource.LatCraftAPIListSuppressedEmails.path_part}"
+}
+
+resource "aws_api_gateway_resource" "LatCraftAPIListSuppressedEmails" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  parent_id               = "${aws_api_gateway_rest_api.latcraft_api.root_resource_id}"
+  path_part               = "list_suppressed_emails"
+}
+
+resource "aws_api_gateway_method" "LatCraftAPIListSuppressedEmailsPOST" {
+  api_key_required        = true
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListSuppressedEmails.id}"
+  http_method             = "POST"
+  authorization           = "NONE"
+}
+
+resource "aws_api_gateway_integration" "LatCraftAPIListSuppressedEmailsPOSTIntegration" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListSuppressedEmails.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIListSuppressedEmailsPOST.http_method}"
+  integration_http_method = "POST"
+  type                    = "AWS"
+  credentials             = "${aws_iam_role.latcraft_api_executor.arn}"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:function:${aws_lambda_function.list_suppressed_emails_function.function_name}/invocations"
+}
+
+resource "aws_api_gateway_method_response" "LatCraftAPIListSuppressedEmailsPOSTResponse" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListSuppressedEmails.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIListSuppressedEmailsPOST.http_method}"
+  status_code             = "200"
+  response_models         = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_method_response" "LatCraftAPIListSuppressedEmailsPOSTError" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListSuppressedEmails.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIListSuppressedEmailsPOST.http_method}"
+  status_code             = "500"
+  response_models         = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "LatCraftAPIListSuppressedEmailsPOSTIntegrationResponse" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIListSuppressedEmails.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIListSuppressedEmailsPOST.http_method}"
+  status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIListSuppressedEmailsPOSTIntegration"
   ]  
 }
 

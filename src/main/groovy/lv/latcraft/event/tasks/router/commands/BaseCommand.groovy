@@ -20,7 +20,7 @@ abstract class BaseCommand implements Command {
   }
 
   static String functionName(Class<? extends BaseTask> taskClass) {
-    taskClass.simpleName.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])").join('_') + '_function'
+    taskClass.simpleName.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])").collect { it.toLowerCase() }.join('_') + '_function'
   }
 
 }
