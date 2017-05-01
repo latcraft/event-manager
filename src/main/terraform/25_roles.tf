@@ -77,6 +77,15 @@ resource "aws_iam_role_policy" "latcraft_lambda_executor_policy" {
         "${aws_s3_bucket.latcraft_images.arn}/*",
         "${aws_s3_bucket.latcraft_code.arn}/*"
       ]
+    },
+    {
+        "Effect": "Allow",
+        "Action": [
+            "lambda:InvokeFunction"
+        ],
+        "Resource": [
+          "${aws_lambda_function.copy_contacts_from_event_brite_to_send_grid_function.arn}", "${aws_lambda_function.create_new_event_function.arn}", "${aws_lambda_function.list_event_brite_venues_function.arn}", "${aws_lambda_function.list_send_grid_suppressed_emails_function.arn}", "${aws_lambda_function.publish_announcement_on_twitter_function.arn}", "${aws_lambda_function.publish_campaign_on_send_grid_function.arn}", "${aws_lambda_function.publish_cards_on_s3_function.arn}", "${aws_lambda_function.publish_event_on_event_brite_function.arn}", "${aws_lambda_function.publish_event_on_lanyrd_function.arn}", "${aws_lambda_function.send_campaign_on_send_grid_function.arn}", "${aws_lambda_function.craftbot_function.arn}"
+        ]
     }
   ]
 }
