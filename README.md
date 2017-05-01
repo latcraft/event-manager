@@ -3,7 +3,7 @@
 
 Automation tasks for event publishing and support. Most of the tasks are executable through the [CraftBot](https://github.com/latcraft/event-manager/blob/master/BOT.md) commands.
 
-> **NOTE:** For running automation tasks locally, copy contents of the `gradle.properties` file from the `latcraft/passwords` project to the `local.propeties` file.
+> **NOTE:** For running automation tasks locally, copy contents of the `local.properties` file from the `latcraft/passwords` project to the `local.propeties` file.
 
 ## Event publishing
 
