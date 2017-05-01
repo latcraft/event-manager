@@ -25,6 +25,7 @@ class CraftBotCommands extends BaseTask {
     // publish twitter
     // send campaign
     // send reminder
+    println input
     [
       "text": "Hello, master!"
     ]
