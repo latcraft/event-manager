@@ -9,8 +9,12 @@ import static lv.latcraft.event.integrations.Configuration.sendGridDefaultListId
 @Log4j("logger")
 class CopyContactsFromEventBriteToSendGrid extends BaseTask {
 
-  Map<String, String> doExecute(Map<String, String> input, Context context) {
-    attendees.collate(300).each { inputData ->
+  Map<String, String> doExecute(Map<String, String> request, Context context) {
+
+    // Parse request parameters
+    int numOfEventsToLoad = request.containsKey('events') && request.events ? Integer.valueOf(request.events) : 10
+
+    getAttendees(numOfEventsToLoad).collate(300).each { inputData ->
       logger.info "Inserting next batch of ${inputData.size()} contact(s)..."
       sendGrid.post("/v3/contactdb/recipients", inputData) { Map responseData ->
         reportResult(inputData, responseData)
@@ -22,8 +26,8 @@ class CopyContactsFromEventBriteToSendGrid extends BaseTask {
     [:]
   }
 
-  List<Map<String, ?>> getAttendees() {
-    uniqueAttendees(allEventBriteAttendees).collect { fromEventBriteToSendGrid(it) }.findAll { it.email }
+  List<Map<String, ?>> getAttendees(int numOfEventsToLoad) {
+    uniqueAttendees(getAllEventBriteAttendees(numOfEventsToLoad)).collect { fromEventBriteToSendGrid(it) }.findAll { it.email }
   }
 
   void reportResult(List<Map<String, ?>> inputData, Map responseData) {
@@ -68,11 +72,11 @@ class CopyContactsFromEventBriteToSendGrid extends BaseTask {
     attendees
   }
 
-  List<Map<String, ?>> getAllEventBriteAttendees() {
+  List<Map<String, ?>> getAllEventBriteAttendees(int numOfEventsToLoad) {
     List<Map<String, ?>> attendees = []
     eventBrite.events.findAll { Map eventBriteEvent ->
       !eventBriteEvent.name.text.toLowerCase().startsWith('devternity')
-    }.each { Map eventBriteEvent ->
+    }.reverse().take(numOfEventsToLoad).each { Map eventBriteEvent ->
       logger.info "Extracting attendees from: ${eventBriteEvent.name.text}"
       attendees.addAll(eventBrite.getAttendees(eventBriteEvent.id as String))
     }

@@ -16,7 +16,7 @@ class ListEventBriteVenues extends BaseTask {
     response.each { key, value ->
       logger.info "${key} -> ${value}"
     }
-    slack.send("Master, here are available EventBrite venues: \n" + response.sort { entry -> entry.value }.collect { key, value -> "${key} -> ${value}" }.join("\n"))
+    slack.send("Master, here are available EventBrite venues: \n" + response.sort { entry -> entry.value }.collect { key, value -> "    ${key} \u21d2 ${value}" }.join("\n"))
     response
   }
 

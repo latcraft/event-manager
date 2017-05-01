@@ -36,19 +36,6 @@ dependencies {
   testCompile 'junit:junit:4.12'
 }
 
-task buildZip(type: Zip, dependsOn: classes) {
-  from compileGroovy
-  from processResources
-  into ('fonts') {
-    from file('src/main/resources/fonts')
-  }
-  into('lib') {
-    from configurations.runtime
-  }           
-}
-
-build.dependsOn buildZip
-
 test {
   systemProperties = System.getProperties().findAll { key, value ->
     key.startsWith('latcraft')
@@ -333,3 +320,16 @@ task generateTravisAfterDeploy {
     println "  - \"aws lambda update-function-code --function-name craftbot_function --s3-bucket latcraft-code --s3-key event-manager.zip\""
   }
 }
+
+task buildZip(type: Zip, dependsOn: [classes, generateApiMethodDefinitions, generateFunctionDefinitions]) {
+  from compileGroovy
+  from processResources
+  into ('fonts') {
+    from file('src/main/resources/fonts')
+  }
+  into('lib') {
+    from configurations.runtime
+  }
+}
+
+build.dependsOn buildZip
