@@ -68,3 +68,16 @@ file('src/main/groovy/lv/latcraft/event/tasks').eachFile {
     }
   }
 }
+
+task generateFunctionsDefinitions {
+  doLast {
+
+  }
+}
+
+task generateApiMethodDefinitions {
+  doLast {
+
+  }
+}
+

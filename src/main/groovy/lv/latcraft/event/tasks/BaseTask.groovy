@@ -38,6 +38,7 @@ abstract class BaseTask {
   }
 
   Map<String, String> execute(Map<String, String> request, Context context) {
+    System.setProperty('user.timezone', 'Europe/Riga')
     Map<String, String> response = [:]
     try {
       baseLogger.info "Received request parameters: ${request}"
@@ -64,6 +65,7 @@ abstract class BaseTask {
 
   void updateMasterData(List<Map<String, ?>> eventsToUpdate) {
     baseLogger.info "Updating master data in GitHub"
+    // TODO: compare and update only if there are differences
     gitHub.updateFile('/repos/latcraft/website/contents/data/events.json', dumpJson(eventsToUpdate))
   }
 

@@ -41,7 +41,7 @@ class PublishCardsOnS3 extends BaseTask {
     boolean updateEventData = request.containsKey('updateEventData') ? Boolean.valueOf(request.updateEventData) : true
     logger.info("Selected cards: ${selectedCards}")
     logger.info("Send Slack message: ${sendSlackMessage}")
-    logger.info("Update master data: ${updateEventData}")
+    logger.info("Update event data: ${updateEventData}")
 
     Map<String, String> response = [:]
     futureEvents.each { Map<String, ?> event ->
