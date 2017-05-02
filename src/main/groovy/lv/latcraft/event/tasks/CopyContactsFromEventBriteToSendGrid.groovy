@@ -14,15 +14,21 @@ class CopyContactsFromEventBriteToSendGrid extends BaseTask {
     // Parse request parameters
     int numOfEventsToLoad = request.containsKey('events') && request.events ? Integer.valueOf(request.events) : 10
 
+    boolean foundContacts = false
     getAttendees(numOfEventsToLoad).collate(300).each { inputData ->
       logger.info "Inserting next batch of ${inputData.size()} contact(s)..."
       sendGrid.post("/v3/contactdb/recipients", inputData) { Map responseData ->
-        reportResult(inputData, responseData)
+        foundContacts = foundContacts || reportResult(inputData, responseData)
         sleep(1000)
         sendGrid.post("/v3/contactdb/lists/${sendGridDefaultListId}/recipients", responseData.persisted_recipients)
         sleep(1000)
       }
     }
+
+    if (!foundContacts) {
+      slack.send("Sorry, master, no new contacts discovered this time!")
+    }
+
     [:]
   }
 
@@ -30,12 +36,15 @@ class CopyContactsFromEventBriteToSendGrid extends BaseTask {
     uniqueAttendees(getAllEventBriteAttendees(numOfEventsToLoad)).collect { fromEventBriteToSendGrid(it) }.findAll { it.email }
   }
 
-  void reportResult(List<Map<String, ?>> inputData, Map responseData) {
+  boolean reportResult(List<Map<String, ?>> inputData, Map responseData) {
+    boolean foundContacts = false
     if (responseData.new_count.toString().toLong() > 0) {
+      foundContacts = true
       logger.info "New contacts: ${responseData.new_count}"
       slack.send("New contacts discovered, master! (${responseData.new_count})")
     }
     handleErrors(inputData, responseData)
+    foundContacts
   }
 
   void handleErrors(List<Map<String, ?>> inputData, Map responseData) {
