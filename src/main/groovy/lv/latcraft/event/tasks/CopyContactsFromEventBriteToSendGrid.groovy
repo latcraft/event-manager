@@ -18,10 +18,17 @@ class CopyContactsFromEventBriteToSendGrid extends BaseTask {
     getAttendees(numOfEventsToLoad).collate(300).each { inputData ->
       logger.info "Inserting next batch of ${inputData.size()} contact(s)..."
       sendGrid.post("/v3/contactdb/recipients", inputData) { Map responseData ->
+
         foundContacts = foundContacts || reportResult(inputData, responseData)
+
+        // This sleep is indeed to avoid hitting SendGrid's API request limit (2 requests/second)
         sleep(1000)
+
         sendGrid.post("/v3/contactdb/lists/${sendGridDefaultListId}/recipients", responseData.persisted_recipients)
+
+        // This sleep is indeed to avoid hitting SendGrid's API request limit (2 requests/second)
         sleep(1000)
+
       }
     }
 
