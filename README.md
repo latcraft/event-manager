@@ -1,4 +1,4 @@
-[![Conference attendee](https://devternity.com/shields/fellow.svg)](https://devternity.com)
+[![Conference attendee](https://devternity.com/shields/fellow.svg)](https://devternity.com) [![Build Status](https://travis-ci.org/latcraft/event-manager.svg?branch=master)](https://travis-ci.org/latcraft/event-manager)
 
 # Event manager
 
