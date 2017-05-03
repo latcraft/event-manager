@@ -8,6 +8,7 @@ import lv.latcraft.event.integrations.GitHub
 import lv.latcraft.event.integrations.SendGrid
 import lv.latcraft.event.integrations.Slack
 
+import static lv.latcraft.event.utils.Constants.dateTimeFormat
 import static lv.latcraft.event.utils.Constants.timeZone
 import static lv.latcraft.event.utils.Utils.dumpJson
 import static lv.latcraft.event.utils.Constants.dateFormat
@@ -93,7 +94,7 @@ abstract class BaseTask {
   }
 
   static boolean isFutureEvent(Map<String, ?> event) {
-    dateFormat.parse(event['date'].toString()) > new Date()
+    dateTimeFormat.parse("${event['date']} ${event['time'] ?: '18:30'}") > new Date()
   }
 
   static boolean validateRequiredFields(Map<String, ?> event) {

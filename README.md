@@ -17,6 +17,10 @@ Event publishing process consists of the following steps:
 
         gradlew publishEventOnEventBrite
 
+   Or the following `/craftbot` command:
+   
+        /craftbot publish eventbrite
+
    > **WARNING:** This task MUST be executed FIRST and event lead must wait until data inside `events.json` is updated since other tasks depend on it.
 
    It is safe to rerun this task several times after the first publication if there are any changes in the event description.
@@ -24,7 +28,11 @@ Event publishing process consists of the following steps:
 2. **Automated:** Generate event cards using the following task:
    
         gradlew publishCardsOnS3
-        
+
+    Or the following `/craftbot` command:
+       
+        /craftbot publish cards 
+    
     Cards will be generated on AWS S3 share. Links to the cards will be published inside `#craftbot` channel in Slack.    
     
     > **WARNING:** It is a responsibility of the event lead to share cards at convenient times on social networks. 
@@ -37,10 +45,18 @@ Event publishing process consists of the following steps:
 
         gradlew copyContactsFromEventBriteToSendGrid
 
+    Or the following `/craftbot` command:
+   
+        /craftbot copy contacts 4
+
 4. **Automated:** Create invitation e-mail on SendGrid using the following task:
   
         gradlew publishCampaignOnSendGrid
  
+    Or the following `/craftbot` command:
+    
+        /craftbot publish sendgrid
+
     Link to the e-mail HTML will be published inside `#craftbot` channel in Slack.
       
      > **WARNING:** Verify e-mail's content and layout before executing next task.   
@@ -52,6 +68,10 @@ Event publishing process consists of the following steps:
 5. **Automated:** Send the invitation letter using the following task:
     
         gradlew sendCampaignOnSendGrid
+
+    Or the following `/craftbot` command:
+    
+        /craftbot send campaign
 
     > **WARNING:** This task can executed only once and is not reversible.
     
