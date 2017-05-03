@@ -122,7 +122,7 @@ class PublishCardsOnS3 extends BaseTask {
           }
         }
       } else {
-        slack.send("Master, I know you asked me to generate some cards, but it looks like there is nothing to do. Either there are no future events or card you asked me to generate do not exist. I'm very sorry, master!")
+        slack.send("Master, I know you asked me to generate some cards, but it looks like there is nothing to do. Either there are no future events or card you asked me to generate does not exist. I'm very sorry, master!")
       }
 
     }
