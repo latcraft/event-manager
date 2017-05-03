@@ -37,10 +37,10 @@ class PublishCardsOnS3 extends BaseTask {
 
     // Parse request parameters
     Set<String> selectedCards = request.containsKey('cards') && request.cards ? request.cards.split(',') as Set : EVENT_CARDS + SPEAKER_CARDS
-    boolean sendSlackMessage = request.containsKey('sendSlackMessage') ? Boolean.valueOf(request.sendSlackMessage) : true
+    boolean sendLinksToSlack = request.containsKey('sendLinksToSlack') ? Boolean.valueOf(request.sendLinksToSlack) : true
     boolean updateEventData = request.containsKey('updateEventData') ? Boolean.valueOf(request.updateEventData) : true
     logger.info("Selected cards: ${selectedCards}")
-    logger.info("Send Slack message: ${sendSlackMessage}")
+    logger.info("Send Slack message: ${sendLinksToSlack}")
     logger.info("Update event data: ${updateEventData}")
 
     Map<String, String> response = [:]
@@ -114,10 +114,12 @@ class PublishCardsOnS3 extends BaseTask {
       }
 
       // Send Slack message.
-      if (cardsGenerated && sendSlackMessage) {
+      if (cardsGenerated) {
         slack.send("Good news, master! Event card(s) are uploaded to AWS S3!")
-        response.sort { it.key }.each { key, value ->
-          slack.send(value)
+        if (sendLinksToSlack) {
+          response.sort { it.key }.each { key, value ->
+            slack.send(value)
+          }
         }
       } else {
         slack.send("Master, I know you asked me to generate some cards, but it looks like there is nothing to do. Either there are no future events or card you asked me to generate do not exist. I'm very sorry, master!")
@@ -157,9 +159,9 @@ class PublishCardsOnS3 extends BaseTask {
 
   static void main(String[] args) {
     new PublishCardsOnS3().execute([
-      cards: 'normal_event_card_v3',
-      sendSlackMessage: 'false',
-      updateEventData: 'false',
+      cards           : 'normal_event_card_v3',
+      sendLinksToSlack: 'true',
+      updateEventData : 'false',
     ], new InternalContext())
   }
 
