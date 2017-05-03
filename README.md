@@ -1,3 +1,4 @@
+[![Conference attendee](https://devternity.com/shields/fellow.svg)](https://devternity.com)
 
 # Event manager
 
