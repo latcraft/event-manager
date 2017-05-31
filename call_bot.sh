@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# This is an example script on how to call LatCraft API. The following variables have to be defined:
+# This is an example script on how to call CraftBot API. The following variables have to be defined:
 #
 # export COMMAND_SECRET=<ACTUAL COMMAND SECRET>
 # export API_ID=<ACTUAL API ID>
