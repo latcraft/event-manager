@@ -11,7 +11,7 @@ class PublishCardsOnS3Command extends BaseCommand {
   String getPrefix() { "publish cards" }
 
   @Override
-  String getDescription() { "publish cards [<card_template_id_1> [<card_template_id_2> ... ]] " }
+  String getDescription() { "publish cards <card_template_id_1> [<card_template_id_2> [<card_template_id_3> ... ]] " }
 
   @Override
   String apply(String command) {

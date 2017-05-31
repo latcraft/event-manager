@@ -1,3 +1,4 @@
+[![Conference attendee](https://devternity.com/shields/fellow.svg)](https://devternity.com) [![Build Status](https://travis-ci.org/latcraft/event-manager.svg?branch=master)](https://travis-ci.org/latcraft/event-manager)
 
 # Event manager
 
@@ -73,7 +74,9 @@ Event publishing process consists of the following steps:
     
         /craftbot send campaign
 
-    > **WARNING:** This task can executed only once and is not reversible.
+    > **WARNING:** This task is not reversible. Double-check HTML e-mail message from previous step before proceeding.
+    
+    > **NOTE:** This task is safe to be called multiple times, because explicit check is done on SendGrid level to verify that campaign has not already been sent. 
     
 6. **Manual:** Tweet about the event and speakers using LatCraft Twitter account and cards generated above. Pin the tweet about event. Use `normal_event_card_v3`, `workshop_event_card_v1` or `workshop_event_card_v2` card for event and `speaker_card_v2` for speakers.
 
