@@ -34,8 +34,6 @@ class PublishCardsOnS3 extends BaseTask {
     'speaker_card_v2',
   ]
 
-  static final long TWITTER_MAX_PNG_FILE_SIZE_LIMIT = 2 * ((1 << 10)**2)
-
   Map<String, String> doExecute(Map<String, String> request, Context context) {
 
     // Parse request parameters
@@ -129,14 +127,6 @@ class PublishCardsOnS3 extends BaseTask {
     String pngObjectUrl = getObjectUrl("${filePrefix}.png")
     logger.info("Object created/updated: ${pngObjectUrl}")
     cards[filePrefix] = pngObjectUrl
-
-    if (pngFile.size() >= TWITTER_MAX_PNG_FILE_SIZE_LIMIT) {
-      def jpegFile = renderJPEG(cardFile)
-      s3.putObject(putRequest("${filePrefix}.jpeg", jpegFile))
-      String jpegObjectUrl = getObjectUrl("${filePrefix}.jpeg")
-      logger.info("Object created/updated: ${jpegObjectUrl}")
-      cards[filePrefix + "-jpeg"] = jpegObjectUrl
-    }
 
     cards
   }

@@ -25,7 +25,7 @@ import static org.apache.fop.svg.AbstractFOPTranscoder.KEY_STROKE_TEXT
 @Commons
 class SvgMethods {
 
-  private static final int DEFAULT_DPI = 300
+  private static final int DEFAULT_DPI = 150
 
   static File renderPDF(File svgFile) {
     PDFTranscoder t = configureFonts(new PDFTranscoder())
