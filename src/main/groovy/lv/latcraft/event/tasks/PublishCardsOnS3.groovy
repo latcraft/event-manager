@@ -10,6 +10,7 @@ import org.apache.commons.lang.WordUtils
 import static lv.latcraft.event.utils.FileMethods.temporaryFile
 import static lv.latcraft.event.utils.S3Methods.*
 import static lv.latcraft.event.utils.SanitizationMethods.replaceLatvianLetters
+import static lv.latcraft.event.utils.SvgMethods.renderJPEG
 import static lv.latcraft.event.utils.SvgMethods.renderPNG
 import static lv.latcraft.event.utils.XmlMethods.setAttributeValue
 import static lv.latcraft.event.utils.XmlMethods.setElementValue
@@ -32,6 +33,8 @@ class PublishCardsOnS3 extends BaseTask {
     'speaker_card_v1',
     'speaker_card_v2',
   ]
+
+  static final long TWITTER_MAX_PNG_FILE_SIZE_LIMIT = 2 * ((1 << 10)**2)
 
   Map<String, String> doExecute(Map<String, String> request, Context context) {
 
@@ -57,19 +60,13 @@ class PublishCardsOnS3 extends BaseTask {
 
         String filePrefix = "event-${templateId}-${eventId}"
         File cardFile = temporaryFile(filePrefix, '.svg')
-        String objectUrl = getObjectUrl("${filePrefix}.png")
-        cardsGenerated = true
-
-        // Generate event card.
-        logger.info "Generating ${filePrefix}"
         cardFile.text = generateEventCard(getSvgTemplate(templateId), event)
-        s3.putObject(putRequest("${filePrefix}.png", renderPNG(cardFile)))
-        logger.info("Object created/updated: ${objectUrl}")
 
+        def cards = generateCards(filePrefix, cardFile)
         // Save result S3 object URLs.
-        response[filePrefix] = objectUrl
-        event['cards'][filePrefix] = objectUrl
-
+        response << cards
+        event['cards'] << cards
+        cardsGenerated = true
       }
 
       event.schedule.each { Map<String, ?> session ->
@@ -85,19 +82,13 @@ class PublishCardsOnS3 extends BaseTask {
 
             String filePrefix = "event-${templateId}-${eventId}-${speakerId}"
             File cardFile = temporaryFile(filePrefix, '.svg')
-            String objectUrl = getObjectUrl("${filePrefix}.png")
-            cardsGenerated = true
-
-            // Generate event card.
-            logger.info "Generating ${filePrefix}"
             cardFile.text = generateSpeakerCard(getSvgTemplate(templateId), event, session)
-            s3.putObject(putRequest("${filePrefix}.png", renderPNG(cardFile)))
-            logger.info("Object created/updated: ${objectUrl}")
 
+            def cards = generateCards(filePrefix, cardFile)
             // Save result S3 object URLs.
-            response[filePrefix] = objectUrl
-            session['cards'][filePrefix] = objectUrl
-
+            response << cards
+            event['cards'] << cards
+            cardsGenerated = true
           }
         }
       }
@@ -127,6 +118,27 @@ class PublishCardsOnS3 extends BaseTask {
 
     }
     response
+  }
+
+  private Map<String, String> generateCards(String filePrefix, File cardFile) {
+    def cards = [:]
+    // Generate event card.
+    logger.info "Generating ${filePrefix}"
+    def pngFile = renderPNG(cardFile)
+    s3.putObject(putRequest("${filePrefix}.png", pngFile))
+    String pngObjectUrl = getObjectUrl("${filePrefix}.png")
+    logger.info("Object created/updated: ${pngObjectUrl}")
+    cards[filePrefix] = pngObjectUrl
+
+    if (pngFile.size() >= TWITTER_MAX_PNG_FILE_SIZE_LIMIT) {
+      def jpegFile = renderJPEG(cardFile)
+      s3.putObject(putRequest("${filePrefix}.jpeg", jpegFile))
+      String jpegObjectUrl = getObjectUrl("${filePrefix}.jpeg")
+      logger.info("Object created/updated: ${jpegObjectUrl}")
+      cards[filePrefix + "-jpeg"] = jpegObjectUrl
+    }
+
+    cards
   }
 
   static String getSvgTemplate(String templateId) {
