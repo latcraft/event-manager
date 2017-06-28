@@ -10,7 +10,6 @@ import org.apache.commons.lang.WordUtils
 import static lv.latcraft.event.utils.FileMethods.temporaryFile
 import static lv.latcraft.event.utils.S3Methods.*
 import static lv.latcraft.event.utils.SanitizationMethods.replaceLatvianLetters
-import static lv.latcraft.event.utils.SvgMethods.renderJPEG
 import static lv.latcraft.event.utils.SvgMethods.renderPNG
 import static lv.latcraft.event.utils.XmlMethods.setAttributeValue
 import static lv.latcraft.event.utils.XmlMethods.setElementValue
