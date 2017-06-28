@@ -29,7 +29,7 @@ class EventBrite extends BaseJsonClient {
     def attendees = []
     execute(GET, "/v3/events/${eventId}/attendees/".toString(), [:], 1) { data ->
       attendees.addAll(data.attendees as List)
-      for (int pageNumber = 1; data.pagination.page_count >= pageNumber; pageNumber++) {
+      for (int pageNumber = 2; data.pagination.page_count >= pageNumber; pageNumber++) {
         execute(GET, "/v3/events/${eventId}/attendees/".toString(), [:], pageNumber) { pageData ->
           attendees.addAll(pageData.attendees as List)
         }
