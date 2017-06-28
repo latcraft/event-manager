@@ -10,7 +10,7 @@ import twitter4j.TwitterFactory
 import twitter4j.auth.AccessToken
 
 @Log4j("logger")
-class PublishAnnouncementOnTwitter extends BaseTask {
+class PublishEventOnTwitter extends BaseTask {
 
   Map<String, String> doExecute(Map<String, String> request, Context context) {
 
@@ -174,7 +174,7 @@ class PublishAnnouncementOnTwitter extends BaseTask {
 //  task build(dependsOn: [notifyTwitter, twitterUpdateMasterData])
 
   static void main(String[] args) {
-    new PublishAnnouncementOnTwitter().execute([:], new InternalContext())
+    new PublishEventOnTwitter().execute([:], new InternalContext())
   }
 
 }
