@@ -58,7 +58,7 @@ abstract class BaseTask {
     response
   }
 
-  abstract Map<String, String> doExecute(Map<String, String> input, Context context)
+  abstract Map<String, String> doExecute(Map<String, String> request, Context context)
 
   static List<Map<String, ?>> getMasterData() {
     baseLogger.info "Retrieving master data from GitHub"
