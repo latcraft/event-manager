@@ -9,19 +9,34 @@ import lv.latcraft.event.lambda.mock.InternalContext
 class GetStatsFromEventBrite extends BaseTask {
 
   @Override
-  Map<String, String> doExecute(Map<String, String> input, Context context) {
+  Map<String, String> doExecute(Map<String, String> request, Context context) {
     Map response = [:]
-    futureEvents.each { Map event ->
-      String eventId = calculateEventId(event)
-      if (event.eventbriteEventId) {
-        String eventTitle = "LatCraft | ${event.theme}"
-        EventStats eventStats = getEventStats(eventTitle, event.eventbriteEventId as String)
-        slack.send("Event \"LatCraft | ${event.theme}\" (${eventId}, ${event.eventbriteEventId}) has ${eventStats.total} registration(s) and ${eventStats.cancelled} cancellation(s)!")
-      } else {
-        slack.send("Master, it seems , that event \"LatCraft | ${event.theme}\" (${eventId}) is not yet published on EventBrite, so, I can't get you any statistics!")
+    int pastEvents = request.containsKey('past') ? Integer.valueOf(request.past) : 0
+    if (pastEvents <= 0) {
+      futureEvents.each { Map event ->
+        shareEventStats(event)
+      }
+    } else {
+      events.findAll { !isFutureEvent(it) }.take(pastEvents).each { Map event ->
+        shareEventStats(event)
       }
     }
     response
+  }
+
+  private void shareEventStats(Map event) {
+    String eventId = calculateEventId(event)
+    if (event.eventbriteEventId) {
+      String eventTitle = "LatCraft | ${event.theme}"
+      EventStats eventStats = getEventStats(eventTitle, event.eventbriteEventId as String)
+      if (isFutureEvent(event)) {
+        slack.send("Event \"LatCraft | ${event.theme}\" (${eventId}, ${event.eventbriteEventId}) has ${eventStats.total - eventStats.cancelled} registration(s) and ${eventStats.cancelled} cancellation(s)!")
+      } else {
+        slack.send("Event \"LatCraft | ${event.theme}\" (${eventId}, ${event.eventbriteEventId}) had ${eventStats.checkedIn} check-in(s) of ${eventStats.total - eventStats.cancelled} registration(s) and ${eventStats.cancelled} cancellation(s)!")
+      }
+    } else {
+      slack.send("Master, it seems , that event \"LatCraft | ${event.theme}\" (${eventId}) is not yet published on EventBrite, so, I can't get you any statistics!")
+    }
   }
 
   EventStats getEventStats(String eventTitle, String eventbriteEventId) {
@@ -43,7 +58,7 @@ class GetStatsFromEventBrite extends BaseTask {
   }
 
   static void main(String[] args) {
-    new GetStatsFromEventBrite().execute([:], new InternalContext())
+    new GetStatsFromEventBrite().execute([past: 4], new InternalContext())
   }
 
 }
