@@ -2,6 +2,7 @@ package lv.latcraft.event.tasks
 
 import com.amazonaws.services.lambda.runtime.Context
 import groovy.util.logging.Log4j
+import lv.latcraft.event.lambda.mock.InternalContext
 
 @Log4j("logger")
 class ListSuppressedEmails extends BaseTask {
@@ -27,6 +28,10 @@ class ListSuppressedEmails extends BaseTask {
     }
     slack.send("Master, here are SendGrid's suppressed emails: \n" + response.collect { key, value -> "${key} (${value})" }.join("\n"))
     response
+  }
+
+  static void main(String[] args) {
+    new ListSuppressedEmails().execute([:], new InternalContext())
   }
 
 }
