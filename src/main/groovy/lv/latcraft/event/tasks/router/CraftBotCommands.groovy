@@ -20,6 +20,7 @@ class CraftBotCommands extends BaseTask {
     addCommand(new PublishEventOnEventBriteCommand())
     addCommand(new PublishEventOnSendGridCommand())
     addCommand(new SendCampaignOnSendGridCommand())
+    addCommand(new GetStatsFromEventBriteCommand())
   }
 
   static void addCommand(Command c) {
