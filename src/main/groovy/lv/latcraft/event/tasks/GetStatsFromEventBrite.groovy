@@ -45,7 +45,7 @@ class GetStatsFromEventBrite extends BaseTask {
       title: eventTitle,
       total: attendees.size(),
       cancelled: attendees.findAll { it.cancelled }.size(),
-      checkedIn: attendees.findAll { it.checked_in }.size(),
+      checkedIn: attendees.findAll { it.checked_in }.size()
     )
   }
 
@@ -58,7 +58,7 @@ class GetStatsFromEventBrite extends BaseTask {
   }
 
   static void main(String[] args) {
-    new GetStatsFromEventBrite().execute([past: 4], new InternalContext())
+    new GetStatsFromEventBrite().execute([past: "4"], new InternalContext())
   }
 
 }
