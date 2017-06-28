@@ -26,7 +26,7 @@ resource "aws_iam_role_policy" "latcraft_api_executor_policy" {
             "lambda:InvokeFunction"
         ],
         "Resource": [
-          "${aws_lambda_function.copy_contacts_from_event_brite_to_send_grid_function.arn}", "${aws_lambda_function.create_new_event_function.arn}", "${aws_lambda_function.list_event_brite_venues_function.arn}", "${aws_lambda_function.list_suppressed_emails_function.arn}", "${aws_lambda_function.publish_announcement_on_twitter_function.arn}", "${aws_lambda_function.publish_campaign_on_send_grid_function.arn}", "${aws_lambda_function.publish_cards_on_s3_function.arn}", "${aws_lambda_function.publish_event_on_event_brite_function.arn}", "${aws_lambda_function.publish_event_on_lanyrd_function.arn}", "${aws_lambda_function.send_campaign_on_send_grid_function.arn}", "${aws_lambda_function.craftbot_function.arn}"  
+          "${aws_lambda_function.copy_contacts_from_event_brite_to_send_grid_function.arn}", "${aws_lambda_function.create_new_event_function.arn}", "${aws_lambda_function.get_stats_from_event_brite_function.arn}", "${aws_lambda_function.list_event_brite_venues_function.arn}", "${aws_lambda_function.list_suppressed_emails_function.arn}", "${aws_lambda_function.publish_campaign_on_send_grid_function.arn}", "${aws_lambda_function.publish_cards_on_s3_function.arn}", "${aws_lambda_function.publish_event_on_event_brite_function.arn}", "${aws_lambda_function.publish_event_on_lanyrd_function.arn}", "${aws_lambda_function.publish_event_on_twitter_function.arn}", "${aws_lambda_function.send_campaign_on_send_grid_function.arn}", "${aws_lambda_function.craftbot_function.arn}"  
         ]
     }
   ]
@@ -163,6 +163,70 @@ resource "aws_api_gateway_integration_response" "LatCraftAPICreateNewEventPOSTIn
 }
 
 
+resource "aws_lambda_permission" "get_stats_from_event_brite_function_api_gatewaypermission" {
+  statement_id            = "AllowExecutionFromAPIGateway"
+  action                  = "lambda:InvokeFunction"
+  function_name           = "${aws_lambda_function.get_stats_from_event_brite_function.arn}"
+  qualifier               = "${aws_lambda_alias.get_stats_from_event_brite_function_alias.name}"
+  principal               = "apigateway.amazonaws.com"
+  source_arn              = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.latcraft_api.id}/*/POST/${aws_api_gateway_resource.LatCraftAPIGetStatsFromEventBrite.path_part}"
+}
+
+resource "aws_api_gateway_resource" "LatCraftAPIGetStatsFromEventBrite" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  parent_id               = "${aws_api_gateway_rest_api.latcraft_api.root_resource_id}"
+  path_part               = "get_stats_from_event_brite"
+}
+
+resource "aws_api_gateway_method" "LatCraftAPIGetStatsFromEventBritePOST" {
+  api_key_required        = true
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIGetStatsFromEventBrite.id}"
+  http_method             = "POST"
+  authorization           = "NONE"
+}
+
+resource "aws_api_gateway_integration" "LatCraftAPIGetStatsFromEventBritePOSTIntegration" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIGetStatsFromEventBrite.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIGetStatsFromEventBritePOST.http_method}"
+  integration_http_method = "POST"
+  type                    = "AWS"
+  credentials             = "${aws_iam_role.latcraft_api_executor.arn}"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:function:${aws_lambda_function.get_stats_from_event_brite_function.function_name}/invocations"
+}
+
+resource "aws_api_gateway_method_response" "LatCraftAPIGetStatsFromEventBritePOSTResponse" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIGetStatsFromEventBrite.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIGetStatsFromEventBritePOST.http_method}"
+  status_code             = "200"
+  response_models         = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_method_response" "LatCraftAPIGetStatsFromEventBritePOSTError" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIGetStatsFromEventBrite.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIGetStatsFromEventBritePOST.http_method}"
+  status_code             = "500"
+  response_models         = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "LatCraftAPIGetStatsFromEventBritePOSTIntegrationResponse" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIGetStatsFromEventBrite.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIGetStatsFromEventBritePOST.http_method}"
+  status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIGetStatsFromEventBritePOSTIntegration"
+  ]  
+}
+
+
 resource "aws_lambda_permission" "list_event_brite_venues_function_api_gatewaypermission" {
   statement_id            = "AllowExecutionFromAPIGateway"
   action                  = "lambda:InvokeFunction"
@@ -287,70 +351,6 @@ resource "aws_api_gateway_integration_response" "LatCraftAPIListSuppressedEmails
   status_code             = "200"
   depends_on              = [
     "aws_api_gateway_integration.LatCraftAPIListSuppressedEmailsPOSTIntegration"
-  ]  
-}
-
-
-resource "aws_lambda_permission" "publish_announcement_on_twitter_function_api_gatewaypermission" {
-  statement_id            = "AllowExecutionFromAPIGateway"
-  action                  = "lambda:InvokeFunction"
-  function_name           = "${aws_lambda_function.publish_announcement_on_twitter_function.arn}"
-  qualifier               = "${aws_lambda_alias.publish_announcement_on_twitter_function_alias.name}"
-  principal               = "apigateway.amazonaws.com"
-  source_arn              = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.latcraft_api.id}/*/POST/${aws_api_gateway_resource.LatCraftAPIPublishAnnouncementOnTwitter.path_part}"
-}
-
-resource "aws_api_gateway_resource" "LatCraftAPIPublishAnnouncementOnTwitter" {
-  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
-  parent_id               = "${aws_api_gateway_rest_api.latcraft_api.root_resource_id}"
-  path_part               = "publish_announcement_on_twitter"
-}
-
-resource "aws_api_gateway_method" "LatCraftAPIPublishAnnouncementOnTwitterPOST" {
-  api_key_required        = true
-  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
-  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishAnnouncementOnTwitter.id}"
-  http_method             = "POST"
-  authorization           = "NONE"
-}
-
-resource "aws_api_gateway_integration" "LatCraftAPIPublishAnnouncementOnTwitterPOSTIntegration" {
-  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
-  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishAnnouncementOnTwitter.id}"
-  http_method             = "${aws_api_gateway_method.LatCraftAPIPublishAnnouncementOnTwitterPOST.http_method}"
-  integration_http_method = "POST"
-  type                    = "AWS"
-  credentials             = "${aws_iam_role.latcraft_api_executor.arn}"
-  uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:function:${aws_lambda_function.publish_announcement_on_twitter_function.function_name}/invocations"
-}
-
-resource "aws_api_gateway_method_response" "LatCraftAPIPublishAnnouncementOnTwitterPOSTResponse" {
-  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
-  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishAnnouncementOnTwitter.id}"
-  http_method             = "${aws_api_gateway_method.LatCraftAPIPublishAnnouncementOnTwitterPOST.http_method}"
-  status_code             = "200"
-  response_models         = {
-    "application/json" = "Empty"
-  }
-}
-
-resource "aws_api_gateway_method_response" "LatCraftAPIPublishAnnouncementOnTwitterPOSTError" {
-  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
-  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishAnnouncementOnTwitter.id}"
-  http_method             = "${aws_api_gateway_method.LatCraftAPIPublishAnnouncementOnTwitterPOST.http_method}"
-  status_code             = "500"
-  response_models         = {
-    "application/json" = "Empty"
-  }
-}
-
-resource "aws_api_gateway_integration_response" "LatCraftAPIPublishAnnouncementOnTwitterPOSTIntegrationResponse" {
-  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
-  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishAnnouncementOnTwitter.id}"
-  http_method             = "${aws_api_gateway_method.LatCraftAPIPublishAnnouncementOnTwitterPOST.http_method}"
-  status_code             = "200"
-  depends_on              = [
-    "aws_api_gateway_integration.LatCraftAPIPublishAnnouncementOnTwitterPOSTIntegration"
   ]  
 }
 
@@ -607,6 +607,70 @@ resource "aws_api_gateway_integration_response" "LatCraftAPIPublishEventOnLanyrd
   status_code             = "200"
   depends_on              = [
     "aws_api_gateway_integration.LatCraftAPIPublishEventOnLanyrdPOSTIntegration"
+  ]  
+}
+
+
+resource "aws_lambda_permission" "publish_event_on_twitter_function_api_gatewaypermission" {
+  statement_id            = "AllowExecutionFromAPIGateway"
+  action                  = "lambda:InvokeFunction"
+  function_name           = "${aws_lambda_function.publish_event_on_twitter_function.arn}"
+  qualifier               = "${aws_lambda_alias.publish_event_on_twitter_function_alias.name}"
+  principal               = "apigateway.amazonaws.com"
+  source_arn              = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.latcraft_api.id}/*/POST/${aws_api_gateway_resource.LatCraftAPIPublishEventOnTwitter.path_part}"
+}
+
+resource "aws_api_gateway_resource" "LatCraftAPIPublishEventOnTwitter" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  parent_id               = "${aws_api_gateway_rest_api.latcraft_api.root_resource_id}"
+  path_part               = "publish_event_on_twitter"
+}
+
+resource "aws_api_gateway_method" "LatCraftAPIPublishEventOnTwitterPOST" {
+  api_key_required        = true
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishEventOnTwitter.id}"
+  http_method             = "POST"
+  authorization           = "NONE"
+}
+
+resource "aws_api_gateway_integration" "LatCraftAPIPublishEventOnTwitterPOSTIntegration" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishEventOnTwitter.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIPublishEventOnTwitterPOST.http_method}"
+  integration_http_method = "POST"
+  type                    = "AWS"
+  credentials             = "${aws_iam_role.latcraft_api_executor.arn}"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:function:${aws_lambda_function.publish_event_on_twitter_function.function_name}/invocations"
+}
+
+resource "aws_api_gateway_method_response" "LatCraftAPIPublishEventOnTwitterPOSTResponse" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishEventOnTwitter.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIPublishEventOnTwitterPOST.http_method}"
+  status_code             = "200"
+  response_models         = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_method_response" "LatCraftAPIPublishEventOnTwitterPOSTError" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishEventOnTwitter.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIPublishEventOnTwitterPOST.http_method}"
+  status_code             = "500"
+  response_models         = {
+    "application/json" = "Empty"
+  }
+}
+
+resource "aws_api_gateway_integration_response" "LatCraftAPIPublishEventOnTwitterPOSTIntegrationResponse" {
+  rest_api_id             = "${aws_api_gateway_rest_api.latcraft_api.id}"
+  resource_id             = "${aws_api_gateway_resource.LatCraftAPIPublishEventOnTwitter.id}"
+  http_method             = "${aws_api_gateway_method.LatCraftAPIPublishEventOnTwitterPOST.http_method}"
+  status_code             = "200"
+  depends_on              = [
+    "aws_api_gateway_integration.LatCraftAPIPublishEventOnTwitterPOSTIntegration"
   ]  
 }
 

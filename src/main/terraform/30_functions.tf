@@ -51,6 +51,32 @@ resource "aws_lambda_alias" "create_new_event_function_alias" {
 }
 
 
+resource "aws_lambda_function" "get_stats_from_event_brite_function" {
+  s3_bucket               = "${aws_s3_bucket.latcraft_code.bucket}"
+  s3_key                  = "event-manager.zip"
+  function_name           = "get_stats_from_event_brite_function"
+  description             = "Get Stats From Event Brite"
+  role                    = "${aws_iam_role.latcraft_lambda_executor.arn}"
+  handler                 = "${var.lambda_code_package_prefix}.GetStatsFromEventBrite::${var.lambda_code_default_method}"
+  runtime                 = "java8"
+  memory_size             = "512"
+  timeout                 = "300"
+  kms_key_arn             = "${aws_kms_key.latcraft_kms_key.arn}"
+  environment {
+    variables = {
+      HOME                = "/var/task"
+      JAVA_FONTS          = "/var/task/fonts"
+    }
+  }
+}
+
+resource "aws_lambda_alias" "get_stats_from_event_brite_function_alias" {
+  name                    = "get_stats_from_event_brite_function_latest"
+  function_name           = "${aws_lambda_function.get_stats_from_event_brite_function.arn}"
+  function_version        = "$LATEST"
+}
+
+
 resource "aws_lambda_function" "list_event_brite_venues_function" {
   s3_bucket               = "${aws_s3_bucket.latcraft_code.bucket}"
   s3_key                  = "event-manager.zip"
@@ -99,32 +125,6 @@ resource "aws_lambda_function" "list_suppressed_emails_function" {
 resource "aws_lambda_alias" "list_suppressed_emails_function_alias" {
   name                    = "list_suppressed_emails_function_latest"
   function_name           = "${aws_lambda_function.list_suppressed_emails_function.arn}"
-  function_version        = "$LATEST"
-}
-
-
-resource "aws_lambda_function" "publish_announcement_on_twitter_function" {
-  s3_bucket               = "${aws_s3_bucket.latcraft_code.bucket}"
-  s3_key                  = "event-manager.zip"
-  function_name           = "publish_announcement_on_twitter_function"
-  description             = "Publish Announcement On Twitter"
-  role                    = "${aws_iam_role.latcraft_lambda_executor.arn}"
-  handler                 = "${var.lambda_code_package_prefix}.PublishAnnouncementOnTwitter::${var.lambda_code_default_method}"
-  runtime                 = "java8"
-  memory_size             = "512"
-  timeout                 = "300"
-  kms_key_arn             = "${aws_kms_key.latcraft_kms_key.arn}"
-  environment {
-    variables = {
-      HOME                = "/var/task"
-      JAVA_FONTS          = "/var/task/fonts"
-    }
-  }
-}
-
-resource "aws_lambda_alias" "publish_announcement_on_twitter_function_alias" {
-  name                    = "publish_announcement_on_twitter_function_latest"
-  function_name           = "${aws_lambda_function.publish_announcement_on_twitter_function.arn}"
   function_version        = "$LATEST"
 }
 
@@ -233,6 +233,32 @@ resource "aws_lambda_alias" "publish_event_on_lanyrd_function_alias" {
 }
 
 
+resource "aws_lambda_function" "publish_event_on_twitter_function" {
+  s3_bucket               = "${aws_s3_bucket.latcraft_code.bucket}"
+  s3_key                  = "event-manager.zip"
+  function_name           = "publish_event_on_twitter_function"
+  description             = "Publish Event On Twitter"
+  role                    = "${aws_iam_role.latcraft_lambda_executor.arn}"
+  handler                 = "${var.lambda_code_package_prefix}.PublishEventOnTwitter::${var.lambda_code_default_method}"
+  runtime                 = "java8"
+  memory_size             = "512"
+  timeout                 = "300"
+  kms_key_arn             = "${aws_kms_key.latcraft_kms_key.arn}"
+  environment {
+    variables = {
+      HOME                = "/var/task"
+      JAVA_FONTS          = "/var/task/fonts"
+    }
+  }
+}
+
+resource "aws_lambda_alias" "publish_event_on_twitter_function_alias" {
+  name                    = "publish_event_on_twitter_function_latest"
+  function_name           = "${aws_lambda_function.publish_event_on_twitter_function.arn}"
+  function_version        = "$LATEST"
+}
+
+
 resource "aws_lambda_function" "send_campaign_on_send_grid_function" {
   s3_bucket               = "${aws_s3_bucket.latcraft_code.bucket}"
   s3_key                  = "event-manager.zip"
@@ -319,7 +345,7 @@ resource "aws_iam_role_policy" "latcraft_lambda_executor_policy" {
             "lambda:InvokeFunction"
         ],
         "Resource": [
-          "${aws_lambda_function.copy_contacts_from_event_brite_to_send_grid_function.arn}", "${aws_lambda_function.create_new_event_function.arn}", "${aws_lambda_function.list_event_brite_venues_function.arn}", "${aws_lambda_function.list_suppressed_emails_function.arn}", "${aws_lambda_function.publish_announcement_on_twitter_function.arn}", "${aws_lambda_function.publish_campaign_on_send_grid_function.arn}", "${aws_lambda_function.publish_cards_on_s3_function.arn}", "${aws_lambda_function.publish_event_on_event_brite_function.arn}", "${aws_lambda_function.publish_event_on_lanyrd_function.arn}", "${aws_lambda_function.send_campaign_on_send_grid_function.arn}", "${aws_lambda_function.craftbot_function.arn}"
+          "${aws_lambda_function.copy_contacts_from_event_brite_to_send_grid_function.arn}", "${aws_lambda_function.create_new_event_function.arn}", "${aws_lambda_function.get_stats_from_event_brite_function.arn}", "${aws_lambda_function.list_event_brite_venues_function.arn}", "${aws_lambda_function.list_suppressed_emails_function.arn}", "${aws_lambda_function.publish_campaign_on_send_grid_function.arn}", "${aws_lambda_function.publish_cards_on_s3_function.arn}", "${aws_lambda_function.publish_event_on_event_brite_function.arn}", "${aws_lambda_function.publish_event_on_lanyrd_function.arn}", "${aws_lambda_function.publish_event_on_twitter_function.arn}", "${aws_lambda_function.send_campaign_on_send_grid_function.arn}", "${aws_lambda_function.craftbot_function.arn}"
         ]
     }
   ]
