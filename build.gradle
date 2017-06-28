@@ -22,12 +22,18 @@ dependencies {
   compile 'org.apache.xmlgraphics:batik-codec:1.9'
   compile 'org.apache.xmlgraphics:xmlgraphics-commons:2.2'
   compile 'org.apache.xmlgraphics:fop:2.2'
-  compile "org.twitter4j:twitter4j-core:4.0.4"
-  compile "org.twitter4j:twitter4j-stream:4.0.4"
-  compile "org.twitter4j:twitter4j-async:4.0.4"
-  compile "org.twitter4j:twitter4j-media-support:4.0.4"
-  compile "org.twitter4j:twitter4j-httpclient-support:2.2.6"
+  compile 'org.twitter4j:twitter4j-core:4.0.4'
+  compile 'org.twitter4j:twitter4j-stream:4.0.4'
+  compile 'org.twitter4j:twitter4j-async:4.0.4'
+  compile 'org.twitter4j:twitter4j-media-support:4.0.4'
+  compile 'org.twitter4j:twitter4j-httpclient-support:2.2.6'
   compile 'log4j:log4j:1.2.17'
+  compile 'org.gebish:geb-core:0.12.2'
+  compile 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1'
+  compile 'org.seleniumhq.selenium:selenium-firefox-driver:2.47.1'
+  compile 'org.seleniumhq.selenium:selenium-chrome-driver:2.47.1'
+  compile 'org.seleniumhq.selenium:selenium-java:2.47.1'
+  compile 'org.seleniumhq.selenium:selenium-support:2.47.1'
   testCompile 'junit:junit:4.12'
 }
 
