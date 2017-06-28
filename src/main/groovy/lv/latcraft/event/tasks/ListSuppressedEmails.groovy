@@ -8,7 +8,7 @@ import lv.latcraft.event.lambda.mock.InternalContext
 class ListSuppressedEmails extends BaseTask {
 
   @Override
-  Map<String, String> doExecute(Map<String, String> input, Context context) {
+  Map<String, String> doExecute(Map<String, String> request, Context context) {
     Map<String, String> response = [:]
     sendGrid.suppressions.each { suppression ->
       logger.info "${suppression.email} (${suppression.group_name})"
