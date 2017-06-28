@@ -2,15 +2,10 @@
 plugins {
   id 'groovy'
   id 'idea'
-  id 'jp.classmethod.aws.lambda' version '0.28'
 }
 
 repositories {
   mavenCentral()
-}
-
-aws {
-  region = "eu-west-1"
 }
 
 dependencies {
@@ -75,6 +70,7 @@ forEachLambdaTask { File taskFile, String functionName, String functionDescripti
 }
 
 task generateFunctionDefinitions {
+  group = 'code generation'
   doLast {
     String functionsTerraformContent = ""
     List<String> functions = []
@@ -186,6 +182,7 @@ EOF
 }
 
 task generateApiMethodDefinitions {
+  group = 'code generation'
   doLast {
     String apiMethodsTerraformContent = ""
     List<String> functions = []
@@ -303,6 +300,7 @@ EOF
 }
 
 task generateUpdateCalls {
+  group = 'code generation'
   doLast {
     forEachLambdaTask { File taskFile, String functionName, String functionDescription, String className ->
       println "aws lambda update-function-code --function-name ${functionName}_function --s3-bucket latcraft-code --s3-key event-manager.zip"
@@ -312,7 +310,9 @@ task generateUpdateCalls {
 }
 
 task generateTravisAfterDeploy {
+  group = 'code generation'
   doLast {
+    // TODO: update .travis.yml automatically
     println "after_deploy:"
     forEachLambdaTask { File taskFile, String functionName, String functionDescription, String className ->
       println "  - \"aws lambda update-function-code --function-name ${functionName}_function --s3-bucket latcraft-code --s3-key event-manager.zip\""
@@ -320,6 +320,10 @@ task generateTravisAfterDeploy {
     println "  - \"aws lambda update-function-code --function-name craftbot_function --s3-bucket latcraft-code --s3-key event-manager.zip\""
   }
 }
+
+compileGroovy.dependsOn generateApiMethodDefinitions
+compileGroovy.dependsOn generateFunctionDefinitions
+compileGroovy.dependsOn generateTravisAfterDeploy
 
 task buildZip(type: Zip, dependsOn: [classes, generateApiMethodDefinitions, generateFunctionDefinitions]) {
   from compileGroovy
