@@ -8,17 +8,16 @@ import org.apache.avalon.framework.container.ContainerUtil
 import org.apache.batik.transcoder.TranscoderException
 import org.apache.batik.transcoder.TranscoderInput
 import org.apache.batik.transcoder.TranscoderOutput
+import org.apache.batik.transcoder.image.ImageTranscoder
+import org.apache.batik.transcoder.image.JPEGTranscoder
 import org.apache.batik.transcoder.image.PNGTranscoder
 import org.apache.fop.svg.PDFTranscoder
-
-import static lv.latcraft.event.utils.LambdaMethods.*
 
 import static java.lang.Boolean.FALSE
 import static java.nio.charset.StandardCharsets.UTF_8
 import static lv.latcraft.event.utils.FileMethods.temporaryFile
-import static org.apache.batik.transcoder.SVGAbstractTranscoder.KEY_ALTERNATE_STYLESHEET
-import static org.apache.batik.transcoder.SVGAbstractTranscoder.KEY_PIXEL_UNIT_TO_MILLIMETER
-import static org.apache.batik.transcoder.SVGAbstractTranscoder.KEY_USER_STYLESHEET_URI
+import static lv.latcraft.event.utils.LambdaMethods.isInsideLambda
+import static org.apache.batik.transcoder.SVGAbstractTranscoder.*
 import static org.apache.batik.transcoder.XMLAbstractTranscoder.KEY_XML_PARSER_VALIDATING
 import static org.apache.fop.svg.AbstractFOPTranscoder.KEY_AUTO_FONTS
 import static org.apache.fop.svg.AbstractFOPTranscoder.KEY_STROKE_TEXT
@@ -26,7 +25,7 @@ import static org.apache.fop.svg.AbstractFOPTranscoder.KEY_STROKE_TEXT
 @Commons
 class SvgMethods {
 
-  private static final int DEFAULT_DPI = 300
+  private static final int DEFAULT_DPI = 150
 
   static File renderPDF(File svgFile) {
     PDFTranscoder t = configureFonts(new PDFTranscoder())
@@ -69,7 +68,28 @@ class SvgMethods {
     pngFile
   }
 
-  private static PNGTranscoder configureFonts(PNGTranscoder t) {
+  static File renderJPEG(File svgFile) {
+    JPEGTranscoder t = configureFonts(new JPEGTranscoder())
+    t.addTranscodingHint(JPEGTranscoder.KEY_QUALITY, 1.0f)
+    String svgURI = svgFile.toURI().toString()
+    File pngFile = temporaryFile('temporary', '.jpeg')
+    try {
+      t.transcode(
+        new TranscoderInput(svgURI),
+        new TranscoderOutput(
+          new FileOutputStream(pngFile)
+        )
+      )
+    } catch (TranscoderException e) {
+      log.debug(e)
+      log.debug(e?.exception)
+      log.debug(e?.exception?.cause)
+      throw e
+    }
+    pngFile
+  }
+
+  private static <T extends ImageTranscoder> T configureFonts(T t) {
     File cssFile = temporaryFile('temporary', '.css')
     cssFile.text = """
       @font-face { 
