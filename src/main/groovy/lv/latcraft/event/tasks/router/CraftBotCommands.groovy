@@ -9,22 +9,17 @@ import static lv.latcraft.event.integrations.Configuration.slackCommandSecret
 
 class CraftBotCommands extends BaseTask {
 
-  static final Map<String, Command> commands = [:]
-
   static {
     addCommand(new ListCardTemplatesCommand())
     addCommand(new ListEventBriteVenuesCommand())
     addCommand(new ListSuppressedEmailsCommand())
+    addCommand(new ListEventTemplatesCommand())
     addCommand(new CopyContactsCommand())
     addCommand(new PublishCardsOnS3Command())
     addCommand(new PublishEventOnEventBriteCommand())
     addCommand(new PublishEventOnSendGridCommand())
     addCommand(new SendCampaignOnSendGridCommand())
     addCommand(new GetStatsFromEventBriteCommand())
-  }
-
-  static void addCommand(Command c) {
-    commands[c.prefix] = c
   }
 
   Map<String, String> doExecute(Map<String, String> request, Context context) {
@@ -60,6 +55,12 @@ class CraftBotCommands extends BaseTask {
         "text": "invalid token"
       ]
     }
+  }
+
+  static final Map<String, Command> commands = [:]
+
+  static void addCommand(Command c) {
+    commands[c.prefix] = c
   }
 
   static void main(String[] args) {
