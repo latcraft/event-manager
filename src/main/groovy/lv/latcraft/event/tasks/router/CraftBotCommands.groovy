@@ -25,36 +25,44 @@ class CraftBotCommands extends BaseTask {
   }
 
   Map<String, String> doExecute(Map<String, String> request, Context context) {
-    if (request.containsKey('token') && request.token == slackCommandSecret) {
-      if (request.containsKey('text') && request.text) {
-        if (request.text.startsWith('help')) {
-          return [
-            "response_type": "in_channel",
-            "text"         : "Master, I can do the following things for you:\n" + commands.collect { "    " + it.value.description }.join('\n')
-          ]
-        } else {
-          def response = [
-            "response_type": "in_channel",
-            "text": "I'm very sorry, master, I do not know such a command. Please, make me smarter!"
-          ]
-          commands.each { String prefix, Command command ->
-            if (request.text.startsWith(prefix)) {
-              response = [
-                "response_type": "in_channel",
-                "text"         : command.apply(request.text)
-              ]
+    if (!request.containsKey('ping')) {
+      if (request.containsKey('token') && request.token == slackCommandSecret) {
+        if (request.containsKey('text') && request.text) {
+          if (request.text.startsWith('help')) {
+            return [
+              "response_type": "in_channel",
+              "text"         : "Master, I can do the following things for you:\n" + commands.collect {
+                "    " + it.value.description
+              }.join('\n')
+            ]
+          } else {
+            def response = [
+              "response_type": "in_channel",
+              "text"         : "I'm very sorry, master, I do not know such a command. Please, make me smarter!"
+            ]
+            commands.each { String prefix, Command command ->
+              if (request.text.startsWith(prefix)) {
+                response = [
+                  "response_type": "in_channel",
+                  "text"         : command.apply(request.text)
+                ]
+              }
             }
+            return response
           }
-          return response
+        } else {
+          return [
+            "text": "invalid command"
+          ]
         }
       } else {
         return [
-          "text": "invalid command"
+          "text": "invalid token"
         ]
       }
     } else {
       return [
-        "text": "invalid token"
+        "text": "pong"
       ]
     }
   }
