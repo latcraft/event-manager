@@ -24,4 +24,19 @@ resource "aws_lambda_alias" "craftbot_function_alias" {
   function_version        = "$LATEST"
 }
 
-// TODO: implement cloudwatch schedule to keep lambda warm
+resource "aws_cloudwatch_event_rule" "craftbot_warm_up" {
+  name        = "craftbot_warm_up"
+  description = "Ping CraftBot to keep it warm"
+  schedule_expression = "rate(15 minutes)"
+}
+
+resource "aws_cloudwatch_event_target" "craftbot_warm_up" {
+  rule      = "${aws_cloudwatch_event_rule.craftbot_warm_up.name}"
+  target_id = "craftbot_warm_up"
+  arn       = "${aws_lambda_function.craftbot_function.arn}"
+  input     = <<INPUT
+{
+  "ping": "true"
+}
+INPUT
+}
