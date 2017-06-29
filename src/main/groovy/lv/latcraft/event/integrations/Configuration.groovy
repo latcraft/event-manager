@@ -106,6 +106,14 @@ class Configuration {
     getConfigProperty('latcraftEventbriteFormatId')
   }
 
+  static String getLanyrdUser() {
+    getConfigProperty('latcraftLanyrdUser')
+  }
+
+  static String getLanyrdPassowrd() {
+    getConfigProperty('latcraftLanyrdPassword')
+  }
+
   static String getDefaultSlackHookUrl() {
     getConfigProperty('latcraftSlackHookUrl')
   }

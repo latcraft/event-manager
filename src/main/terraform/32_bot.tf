@@ -23,3 +23,5 @@ resource "aws_lambda_alias" "craftbot_function_alias" {
   function_name           = "${aws_lambda_function.craftbot_function.arn}"
   function_version        = "$LATEST"
 }
+
+// TODO: implement cloudwatch schedule to keep lambda warm
