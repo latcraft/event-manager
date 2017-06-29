@@ -30,7 +30,6 @@ repositories {
 dependencies {
   compile 'org.codehaus.groovy:groovy-all:2.4.11'
   compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
-  // TODO compile 'io.github.http-builder-ng:http-builder-ng-core:0.16.1'
   compile 'com.amazonaws:aws-lambda-java-core:1.1.0'
   compile 'com.amazonaws:aws-lambda-java-events:1.3.0'
   compile 'com.amazonaws:aws-java-sdk-lambda:1.11.125'

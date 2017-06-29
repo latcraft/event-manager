@@ -15,9 +15,11 @@ class CraftBotCommands extends BaseTask {
     addCommand(new ListSuppressedEmailsCommand())
     addCommand(new ListEventTemplatesCommand())
     addCommand(new CopyContactsCommand())
+    addCommand(new CreateNewEventCommand())
     addCommand(new PublishCardsOnS3Command())
     addCommand(new PublishEventOnEventBriteCommand())
     addCommand(new PublishEventOnSendGridCommand())
+    addCommand(new PublishEventOnLanyrdCommand())
     addCommand(new SendCampaignOnSendGridCommand())
     addCommand(new GetStatsFromEventBriteCommand())
   }

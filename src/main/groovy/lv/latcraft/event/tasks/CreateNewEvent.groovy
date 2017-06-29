@@ -11,9 +11,8 @@ class CreateNewEvent extends BaseTask {
     if (futureEvents.size() > 0) {
       slack.send("I'm sorry, master, but it seems that there's already one event planned, so, I will not create another one!")
     } else {
-
       // TODO: create event from template
-
+      slack.send("I'm sorry, master, but this functionality is not yet implemented!")
     }
     response
   }
