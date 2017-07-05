@@ -300,10 +300,10 @@
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="0.43759546"
-     inkscape:cx="1489.9606"
+     inkscape:cx="278.7542"
      inkscape:cy="1052.3622"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -321,7 +321,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -336,64 +336,12 @@
     <g
        id="Layer_2-8-5"
        transform="matrix(1.728,0,0,1.728,2032.7665,-467.86692)" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:60px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-589.50983"
-       y="333.54993"
-       id="text4716-2-8"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4718-1-4"
-         x="-589.50983"
-         y="333.54993"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:80.00000763px;font-family:Economica;-inkscape-font-specification:'Economica Bold'">gh_pages</tspan></text>
     <g
        id="Layer_2-6"
        transform="matrix(1.44,0,0,1.44,2294.3958,-199.90129)" />
     <g
        id="Layer_2-1"
        transform="matrix(1.44,0,0,1.44,1507.0645,289.71497)" />
-    <rect
-       style="opacity:1;fill:#ffffff;fill-opacity:0.82335331;stroke:#000000;stroke-width:4.00000048;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect4714-8-4-6-83"
-       width="513.31842"
-       height="170.11598"
-       x="-739.25531"
-       y="-519.25519"
-       rx="10.000004" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:60px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-414.14563"
-       y="-413.5097"
-       id="text6925"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan6927"
-         x="-414.14563"
-         y="-413.5097"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70.00000763px;font-family:Economica;-inkscape-font-specification:Economica">travis-ci.org</tspan></text>
-    <rect
-       style="opacity:1;fill:#ffffff;fill-opacity:0.82352941;stroke:#000000;stroke-width:4.00000048;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect4714-8-4-6-9"
-       width="513.31842"
-       height="170.11598"
-       x="-869.1969"
-       y="-113.48668"
-       rx="10.000004" />
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:60px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="-560.26099"
-       y="-5.2977109"
-       id="text6925-1"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan6927-3"
-         x="-560.26099"
-         y="-5.2977109"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:70.00000763px;font-family:Economica;-inkscape-font-specification:Economica">terraform</tspan></text>
     <g
        id="Layer_2-7-0"
        transform="matrix(1.4641,0,0,1.4641,518.51768,1656.4551)" />
