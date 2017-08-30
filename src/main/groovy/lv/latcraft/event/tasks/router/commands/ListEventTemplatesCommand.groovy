@@ -1,5 +1,7 @@
 package lv.latcraft.event.tasks.router.commands
 
+import lv.latcraft.event.tasks.CreateNewEvent
+
 class ListEventTemplatesCommand implements Command {
 
   @Override
@@ -10,8 +12,8 @@ class ListEventTemplatesCommand implements Command {
 
   @Override
   String apply(String command) {
-    // TODO: return list of available event templates
-    "Not implemented yet!"
+    """The following event templates are available to you, master:
+    ${CreateNewEvent.EVENT_TEMPLATES.join('\n    ')}"""
   }
 
 }

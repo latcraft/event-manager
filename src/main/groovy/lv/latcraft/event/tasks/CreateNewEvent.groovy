@@ -5,6 +5,15 @@ import lv.latcraft.event.lambda.mock.InternalContext
 
 class CreateNewEvent extends BaseTask {
 
+  static final Set<String> EVENT_TEMPLATES = [
+    '2sessions1quickie',
+    '3sessions',
+    '4quickies',
+    'panel',
+    'workshop',
+    'workshop3trainers',
+  ]
+
   @Override
   Map<String, String> doExecute(Map<String, String> request, Context context) {
     Map response = [:]
