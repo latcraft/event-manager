@@ -7,7 +7,7 @@
   "month": "Month Year",
   "theme": "Secret event",
   "time": "18:30",
-  "endTime": "21:30",
+  "endTime": "21:00",
   "venue": "Zala iela 1, Microsoft Latvia",
   "venueId": 8525599,
   "maps": "https://www.google.lv/maps/place/Microsoft+Latvia+Sia/@56.9518346,24.1135864,17z/data=!3m1!4b1!4m2!3m1!1s0x46eecfd1895509f1:0x87193c3b2eaf2d7c?hl=en",
@@ -30,7 +30,7 @@
       "type": "speech"
     },
     {
-      "time": "19:20",
+      "time": "19:00",
       "title": "Coffee Break",
       "type": "break"
     },
@@ -39,13 +39,13 @@
       "description": "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. ",
       "img": "img/speakers/sh_blackwidow.jpg",
       "name": "Black Widow",
-      "time": "19:35",
+      "time": "19:10",
       "title": "Odio dignissimos ducimus qui blanditiis",
       "twitter": "thewidow",
       "type": "speech"
     },
     {
-      "time": "19:50",
+      "time": "19:30",
       "title": "Coffee Break",
       "type": "break"
     },
@@ -54,13 +54,28 @@
       "description": "Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.",
       "img": "img/speakers/sh_ironman.png",
       "name": "Tony Stark",
-      "time": "20:05",
+      "time": "19:40",
       "title": "Nam libero tempore, cum soluta nobis",
       "twitter": "tonystark",
       "type": "speech"
     },
     {
-      "time": "20:55",
+      "time": "20:00",
+      "title": "Coffee Break",
+      "type": "break"
+    },
+    {
+      "bio": "Wonder maker",
+      "description": "Phasellus placerat cursus magna. Praesent nisl lacus, tempus quis ultrices auctor, accumsan id leo. Morbi posuere vulputate porta. Nullam tincidunt risus eu enim venenatis vulputate. Nulla facilisi. ",
+      "img": "img/speakers/sh_wonderwoman.jpg",
+      "name": "Wonder Woman",
+      "time": "20:10",
+      "title": "Nam libero tempore, cum soluta nobis",
+      "twitter": "tonystark",
+      "type": "speech"
+    },
+    {
+      "time": "20:40",
       "title": "Closing Note",
       "type": "finish"
     }
