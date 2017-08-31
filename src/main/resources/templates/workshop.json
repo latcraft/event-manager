@@ -27,7 +27,10 @@
       "time": "18:40",
       "title": "Workshop on Extreme Mobile Devices",
       "twitter": "batman",
-      "type": "speech"
+      "type": "speech",
+      "tags": [
+      ],
+      "audience": "all"
     },
     {
       "time": "19:20",
