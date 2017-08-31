@@ -48,7 +48,8 @@ class CreateNewEvent extends BaseTask {
   }
 
   void insertTemplate(Map<String, ?> template, String templateId) {
-    updateMasterData(events.add(0, template))
+    events.add(0, template)
+    updateMasterData(events)
     slack.send("Master, I have added new event template (${templateId}) for you!")
   }
 
