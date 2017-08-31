@@ -8,10 +8,15 @@ import lv.latcraft.event.integrations.GitHub
 import lv.latcraft.event.integrations.SendGrid
 import lv.latcraft.event.integrations.Slack
 
+import java.time.DayOfWeek
+import java.time.LocalDate
+
+import static java.time.temporal.TemporalAdjusters.*
 import static lv.latcraft.event.utils.Constants.dateTimeFormat
 import static lv.latcraft.event.utils.Constants.timeZone
 import static lv.latcraft.event.utils.Utils.dumpJson
 import static lv.latcraft.event.utils.Constants.dateFormat
+import static lv.latcraft.event.utils.Constants.monthFormat
 import static lv.latcraft.event.integrations.Configuration.eventDataFile
 import static org.apache.commons.lang.StringUtils.isNotBlank
 
@@ -91,6 +96,19 @@ abstract class BaseTask {
 
   static String calculateInvitationCampaignTitle(Map event) {
     "LatCraft ${event.theme} Invitation ${calculateEventId(event)}".toString()
+  }
+
+  static Date nextEventDate() {
+    // First Tuesday of the following month
+    Date.from(LocalDate.now(timeZone.toZoneId()).with(firstDayOfNextMonth()).with(firstInMonth(DayOfWeek.TUESDAY)).atStartOfDay(timeZone.toZoneId()).toInstant())
+  }
+
+  static String nextEventDateAsString() {
+    dateFormat.format(nextEventDate())
+  }
+
+  static String nextEventMonth() {
+    monthFormat.format(nextEventDate())
   }
 
   static boolean isFutureEvent(Map<String, ?> event) {

@@ -117,16 +117,14 @@ class PublishCardsOnS3 extends BaseTask {
     response
   }
 
-  private Map<String, String> generateCards(String filePrefix, File cardFile) {
+  private static Map<String, String> generateCards(String filePrefix, File cardFile) {
     def cards = [:]
-    // Generate event card.
     logger.info "Generating ${filePrefix}"
     def pngFile = renderPNG(cardFile)
     s3.putObject(putRequest("${filePrefix}.png", pngFile))
     String pngObjectUrl = getObjectUrl("${filePrefix}.png")
     logger.info("Object created/updated: ${pngObjectUrl}")
     cards[filePrefix] = pngObjectUrl
-
     cards
   }
 

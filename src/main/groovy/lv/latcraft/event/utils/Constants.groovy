@@ -13,6 +13,7 @@ class Constants {
   static timeZone = getTimeZone('Europe/Riga')
   static gmt = getTimeZone("GMT")
   static dateFormat = new SimpleDateFormat('d MMMM, yyyy')
+  static monthFormat = new SimpleDateFormat('MMMM yyyy')
   static dateTimeFormat = new SimpleDateFormat('d MMMM, yyyy HH:mm')
   static isoDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
   static sha1 = MessageDigest.getInstance("SHA1")
