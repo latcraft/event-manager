@@ -40,7 +40,7 @@ Event publishing process consists of the following steps:
     
     Different cards have different purposes (check the *Event cards* section below). 
     
-    It is safe to run this task several times if there are any updates to the event data.     
+    It is safe to run this task several times if there are any updates to the event data. 
         
 3. **Automated:** Copy all contacts from EventBrite to SendGrid using the following task:
 
