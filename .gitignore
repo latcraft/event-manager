@@ -26,6 +26,7 @@ out/
 *.backup
 *.tfstate
 *.info
+*.tf
 
 # Other
 local.properties*

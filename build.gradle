@@ -201,7 +201,7 @@ resource "aws_iam_role_policy" "latcraft_lambda_executor_policy" {
 EOF
 }
 """
-    file('src/main/terraform/30_functions.tf').text = functionsTerraformContent + lambdaPolicyTerraformContent
+    file('30_functions.tf').text = functionsTerraformContent + lambdaPolicyTerraformContent
   }
 }
 
@@ -319,7 +319,7 @@ EOF
 }
 
 """
-    file('src/main/terraform/50_api_methods.tf').text = apiPolicyTerraformContent + apiMethodsTerraformContent
+    file('50_api_methods.tf').text = apiPolicyTerraformContent + apiMethodsTerraformContent
   }
 }
 
